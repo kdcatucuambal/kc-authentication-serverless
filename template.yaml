@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: KC Authorizer Lambda
+
+Parameters:
+  EnvironmentId:
+    Type: String
+    Description: Environment ID
+    Default: kec
+  AuthorizerAlias:
+    Type: String
+    Description: Authorizer Lambda Alias
+    Default: production
+
+Resources:
+  AuthorizerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${EnvironmentId}-authorizer-lambda
+      Handler: index.handler
+      Runtime: nodejs16.x
+      CodeUri: ./dist
+      MemorySize: 512
+      Timeout: 10
+      Role: !GetAtt AuthorizerRole.Arn
+      AutoPublishAlias: !Ref AuthorizerAlias
+      Layers:
+        - !Ref AuthorizerLayer
+      Environment:
+        Variables:
+          ENVIRONMENT_ID: !Ref EnvironmentId
+          LOG_LEVEL: DEBUG
+          KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
+          AUTH_AWS_REGION: !Ref AWS::Region
+          AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
+      Tracing: Active
+
+  AuthorizerFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub "${AuthorizerFunction}:${AuthorizerAlias}"
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/authorizers/*'
+
+
+  AuthorizerLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub ${EnvironmentId}-authorizer-lambda-layer
+      ContentUri: ./layer
+      CompatibleRuntimes:
+        - nodejs16.x
+      CompatibleArchitectures:
+        - x86_64
+      LicenseInfo: MIT
+      RetentionPolicy: Retain
+  
+  
+  AuthorizerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - events.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: !Sub ${EnvironmentId}-authorizer-lambda-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                  - "ec2:CreateNetworkInterface"
+                  - "ec2:DescribeNetworkInterfaces"
+                  - "ec2:DeleteNetworkInterface"
+                  - "ec2:AssignPrivateIpAddresses"
+                  - "ec2:UnassignPrivateIpAddresses"
+                  - "xray:PutTraceSegments"
+                  - "xray:PutTelemetryRecords"
+                  - "xray:GetSamplingRules"
+                  - "xray:GetSamplingTargets"
+                  - "xray:GetSamplingStatisticSummaries"
+                Resource: "*"
+
+Outputs:
+  AuthorizerFunction:
+    Description: Authorizer Lambda Function
+    Value: !Ref AuthorizerFunction
+  AuthorizerLayer:
+    Description: Authorizer Lambda Layer
+    Value: !Ref AuthorizerLayer
+  AuthorizerRole:
+    Description: Authorizer Lambda Role
+    Value: !Ref AuthorizerRole

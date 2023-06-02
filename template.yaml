@@ -7,7 +7,7 @@ Parameters:
     Type: String
     Description: Environment ID
     Default: kec
-  AuthorizerAlias:
+  LambdaAliasProduction:
     Type: String
     Description: Authorizer Lambda Alias
     Default: production
@@ -16,14 +16,14 @@ Resources:
   AuthorizerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${EnvironmentId}-authorizer-lambda
+      FunctionName: !Sub ${EnvironmentId}-AuthorizerFunction
       Handler: index.handler
       Runtime: nodejs16.x
       CodeUri: ./dist
       MemorySize: 512
       Timeout: 10
       Role: !GetAtt AuthorizerRole.Arn
-      AutoPublishAlias: !Ref AuthorizerAlias
+      AutoPublishAlias: !Ref LambdaAliasProduction
       Layers:
         - !Ref AuthorizerLayer
       Environment:
@@ -39,7 +39,7 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !Sub "${AuthorizerFunction}:${AuthorizerAlias}"
+      FunctionName: !Sub "${AuthorizerFunction}:${LambdaAliasProduction}"
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/authorizers/*'
 

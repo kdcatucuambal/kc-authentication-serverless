@@ -1,0 +1,34 @@
+{
+    "parameters": {
+        "author": "Kevin Catucuamba",
+        "email": "catucuambakevin@gmail.com",
+        "EnvironmentId": "kec",
+        "Module": "authentication"
+    },
+    "pipeline": {
+        "project": {
+            "project-key": "kc-lab-serverless",
+            "path-service": "src",
+            "backend-branch": "develop",
+            "node-version": "v16.19.1"
+        },
+        "deploy": {
+            "stack-name": "${EnvironmentId}-${Module}-serverless",
+            "s3-bucket": "dev1-kc-authorizer",
+            "prefix": "${EnvironmentId}",
+            "aws-default-region": "us-east-1",
+            "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+            "non-confirm-change-set": "true",
+            "parameters": [
+                {
+                    "parameterKey": "EnvironmentId",
+                    "parameterValue": "${EnvironmentId}"
+                },
+                {
+                    "parameterKey": "LambdaAliasProduction",
+                    "parameterValue": "production"
+                }
+            ]
+        }
+    }
+}

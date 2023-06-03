@@ -1,4 +1,7 @@
 #!/bin/sh
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 CURRENT_BRANCH=$(git branch --show-current)
 echo "Current branch: $CURRENT_BRANCH"
 #check if config.json exists
@@ -39,7 +42,7 @@ if [ ! -d ~/.nvm/versions/node/$NODE_VERSION ]; then
     echo "ERROR: Node version $NODE_VERSION not found!"
     exit 1
 fi
-
+nvm --version
 nvm use $NODE_VERSION
 node --version
 

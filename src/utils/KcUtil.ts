@@ -1,6 +1,8 @@
-import {APIGatewayAuthorizerResult} from "aws-lambda";
-import {PolicyPayload} from "../models/PolicyPayload";
+import {APIGatewayAuthorizerResult, APIGatewayTokenAuthorizerEvent} from "aws-lambda";
 
+
+const AWS_ACCOUNT = process.env.AUTH_AWS_ACCOUNT_ID;
+const AWS_REGION = process.env.AUTH_AWS_REGION;
 
 export class KcUtil {
 
@@ -10,21 +12,38 @@ export class KcUtil {
 
     static async validateToken(token: string): Promise<boolean> {
         //TODO: Implement token validation
-        return token === 'Bearer xyzyouarevalid';
+        return token === 'Bearer xyzuio';
     }
 
-    static async generatePolicy(payload: PolicyPayload): Promise<APIGatewayAuthorizerResult> {
+    static async generatePolicy(event: APIGatewayTokenAuthorizerEvent): Promise<APIGatewayAuthorizerResult> {
+
+        const isTokenFailed = !(await KcUtil.validateToken(event.authorizationToken));
+
+        if (isTokenFailed) {
+            return await KcUtil.createPolicy("user/unauthorized", KcUtil.DENY_TEXT, event.methodArn);
+        }
+
+        const resource = "arn:aws:execute-api:" + AWS_REGION + ":" + AWS_ACCOUNT + ":*/*/*/*";
+        return await KcUtil.createPolicy(KcUtil.PRINCIPAL_ID, KcUtil.ALLOW_TEXT, resource);
+    }
+
+
+    static async createPolicy(
+        principalId: string,
+        effect: string,
+        resource: string): Promise<APIGatewayAuthorizerResult> {
         return {
-            principalId: payload.principalId,
+            principalId: principalId,
             policyDocument: {
                 Version: '2012-10-17',
                 Statement: [
                     {
                         Action: 'execute-api:Invoke',
-                        Effect: payload.effect,
-                        Resource: [payload.resource]
+                        Effect: effect,
+                        Resource: [resource]
                     }
                 ]
+
             },
             context: {
                 key: 'value',
@@ -32,5 +51,6 @@ export class KcUtil {
                 bool: true
             }
         };
+
     }
 }

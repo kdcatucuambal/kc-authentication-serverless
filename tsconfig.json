@@ -8,5 +8,6 @@
         "sourceMap": true,
         "outDir": "dist"
     },
-    "include": ["src/**/*", "test/test.js"]
+    "include": ["src/**/*", "test/test.js"],
+    "exclude": ["src/spikes/**/*"]
 }

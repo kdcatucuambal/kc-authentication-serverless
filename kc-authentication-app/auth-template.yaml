@@ -11,6 +11,18 @@ Parameters:
     Type: String
     Description: Authorizer Lambda Alias
 
+  LogRetentionInDays:
+    Type: String
+    Description: Number of days to retain logs
+
+  AuthAwsRegion:
+    Type: String
+    Description: AWS Region where the Auth stack is deployed
+
+  AuthClientId:
+    Type: String
+    Description: Auth Client ID
+
 Resources:
   AuthorizerLayer:
     Type: AWS::Serverless::LayerVersion
@@ -68,9 +80,12 @@ Resources:
       Location: auth-functions-template.yaml
       Parameters:
         EnvironmentId: !Ref EnvironmentId
-        AuthorizerAlias: !Ref AuthorizerAlias
+        LambdaAliasProduction: !Ref AuthorizerAlias
         AuthRoleArn: !GetAtt AuthorizerRole.Arn
         AuthLayer: !Ref AuthorizerLayer
+        LogRetentionInDays: !Ref LogRetentionInDays
+        AuthAwsRegion: !Ref AuthAwsRegion
+        AuthClientId: !Ref AuthClientId
 
 Outputs:
   AuthorizerLayer:

@@ -7,7 +7,7 @@ Parameters:
     Type: String
     Description: Environment ID
 
-  AuthorizerAlias:
+  LambdaAliasProduction:
     Type: String
     Description: Authorizer Lambda Alias
 
@@ -19,7 +19,51 @@ Parameters:
     Type: String
     Description: Auth Layer Arn
 
+  LogRetentionInDays:
+    Type: String
+    Description: Number of days to retain logs
+
+  AuthAwsRegion:
+    Type: String
+    Description: AWS Region where the Auth stack is deployed
+
+  AuthClientId:
+    Type: String
+    Description: Auth Client ID
+
+
 Resources:
+  AuthApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      AccessLogSetting:
+        DestinationArn: !GetAtt AuthApiGatewayLogGroup.Arn
+      StageName: v1
+      Variables:
+        version_alias: !Ref LambdaAliasProduction
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ../specs/AuthApi.yaml
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          MetricsEnabled: "true"
+          DataTraceEnabled: "false"
+          LoggingLevel: "INFO"
+
+  AuthDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref AuthApiGateway
+
+  AuthApiGatewayLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "API-Gateway-Execution-Logs_${AuthApiGateway}/v1"
+      RetentionInDays: !Ref LogRetentionInDays
+
   AuthorizerLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -30,7 +74,7 @@ Resources:
       MemorySize: 512
       Timeout: 20
       Role: !Ref AuthRoleArn
-      AutoPublishAlias: !Ref AuthorizerAlias
+      AutoPublishAlias: !Ref LambdaAliasProduction
       Layers:
         - !Ref AuthLayer
       Environment:
@@ -60,7 +104,7 @@ Resources:
       MemorySize: 512
       Timeout: 20
       Role: !Ref AuthRoleArn
-      AutoPublishAlias: !Ref AuthorizerAlias
+      AutoPublishAlias: !Ref LambdaAliasProduction
       Layers:
         - !Ref AuthLayer
       Environment:
@@ -68,9 +112,31 @@ Resources:
           ENVIRONMENT_ID: !Ref EnvironmentId
           LOG_LEVEL: DEBUG
           KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
-          AUTH_AWS_REGION: !Ref AWS::Region
+          AUTH_AWS_REGION: !Ref AuthAwsRegion
+          AUTH_CLIENT_ID: !Ref AuthClientId
           AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
       Tracing: Active
+      Events:
+        EventApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AuthApiGateway
+            Path: /auth/login
+            Method: post
+
+  LogInLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${LogInLambda}"
+      RetentionInDays: !Ref LogRetentionInDays
+
+  LogInProductionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub "${LogInLambda}:${LambdaAliasProduction}"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
 
 
   TestInLambda:
@@ -83,7 +149,7 @@ Resources:
       MemorySize: 512
       Timeout: 20
       Role: !Ref AuthRoleArn
-      AutoPublishAlias: !Ref AuthorizerAlias
+      AutoPublishAlias: !Ref LambdaAliasProduction
       Layers:
         - !Ref AuthLayer
       Environment:
@@ -97,15 +163,23 @@ Resources:
 
 
 Outputs:
-    AuthorizerLambdaArn:
-        Description: Authorizer Lambda ARN
-        Value: !GetAtt AuthorizerLambda.Arn
+  AuthorizerLambdaArn:
+    Description: Authorizer Lambda ARN
+    Value: !GetAtt AuthorizerLambda.Arn
 
-    LogInLambdaArn:
-        Description: LogIn Lambda ARN
-        Value: !GetAtt LogInLambda.Arn
+  LogInLambdaArn:
+    Description: LogIn Lambda ARN
+    Value: !GetAtt LogInLambda.Arn
 
-    TestInLambdaArn:
-        Description: TestIn Lambda ARN
-        Value: !GetAtt TestInLambda.Arn
+  TestInLambdaArn:
+    Description: TestIn Lambda ARN
+    Value: !GetAtt TestInLambda.Arn
+
+  ApiId:
+    Description: API ID
+    Value: !Ref AuthApiGateway
+
+  ApiStage:
+    Description: API Stage
+    Value: "v1"
 

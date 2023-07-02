@@ -1,34 +1,46 @@
 {
-    "parameters": {
-        "author": "Kevin Catucuamba",
-        "email": "catucuambakevin@gmail.com",
-        "EnvironmentId": "dev2-cog",
-        "Module": "authentication"
+  "parameters": {
+    "author": "Kevin Catucuamba",
+    "email": "catucuambakevin@gmail.com",
+    "EnvironmentId": "dev2-cog",
+    "Module": "authentication"
+  },
+  "pipeline": {
+    "project": {
+      "project-key": "kc-lab-serverless",
+      "path-service": "kc-authentication-app",
+      "backend-branch": "develop",
+      "node-version": "v16.19.1"
     },
-    "pipeline": {
-        "project": {
-            "project-key": "kc-lab-serverless",
-            "path-service": "kc-authentication-app",
-            "backend-branch": "develop",
-            "node-version": "v16.19.1"
+    "deploy": {
+      "stack-name": "${EnvironmentId}-${Module}-serverless",
+      "s3-bucket": "dev1-kc-authorizer",
+      "prefix": "${EnvironmentId}",
+      "aws-default-region": "us-east-1",
+      "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+      "non-confirm-change-set": "true",
+      "parameters": [
+        {
+          "parameterKey": "EnvironmentId",
+          "parameterValue": "${EnvironmentId}"
         },
-        "deploy": {
-            "stack-name": "${EnvironmentId}-${Module}-serverless",
-            "s3-bucket": "dev1-kc-authorizer",
-            "prefix": "${EnvironmentId}",
-            "aws-default-region": "us-east-1",
-            "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
-            "non-confirm-change-set": "true",
-            "parameters": [
-                {
-                    "parameterKey": "EnvironmentId",
-                    "parameterValue": "${EnvironmentId}"
-                },
-                {
-                    "parameterKey": "AuthorizerAlias",
-                    "parameterValue": "production"
-                }
-            ]
+        {
+          "parameterKey": "AuthorizerAlias",
+          "parameterValue": "production"
+        },
+        {
+          "parameterKey": "LogRetentionInDays",
+          "parameterValue": "7"
+        },
+        {
+          "parameterKey": "AuthAwsRegion",
+          "parameterValue": "us-east-1"
+        },
+        {
+          "parameterKey": "AuthClientId",
+          "parameterValue": "1nbd430stjlirh280e7gkvovfm"
         }
+      ]
     }
+  }
 }

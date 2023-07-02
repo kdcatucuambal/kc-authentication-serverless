@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda functions for KC Authentication
+
+Parameters:
+  EnvironmentId:
+    Type: String
+    Description: Environment ID
+
+  AuthorizerAlias:
+    Type: String
+    Description: Authorizer Lambda Alias
+
+  AuthRoleArn:
+    Type: String
+    Description: Auth Role Arn
+
+  AuthLayer:
+    Type: String
+    Description: Auth Layer Arn
+
+Resources:
+  AuthorizerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${EnvironmentId}-AuthorizerLambda
+      Handler: index.handlerAuthorizer
+      Runtime: nodejs16.x
+      CodeUri: ./dist
+      MemorySize: 512
+      Timeout: 20
+      Role: !Ref AuthRoleArn
+      AutoPublishAlias: !Ref AuthorizerAlias
+      Layers:
+        - !Ref AuthLayer
+      Environment:
+        Variables:
+          ENVIRONMENT_ID: !Ref EnvironmentId
+          LOG_LEVEL: DEBUG
+          KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
+          AUTH_AWS_REGION: !Ref AWS::Region
+          AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
+      Tracing: Active
+
+  AuthorizerLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref AuthorizerLambda.Alias
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/authorizers/*'
+
+  LogInLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${EnvironmentId}-LogInLambda
+      Handler: index.handlerLogIn
+      Runtime: nodejs16.x
+      CodeUri: ./dist
+      MemorySize: 512
+      Timeout: 20
+      Role: !Ref AuthRoleArn
+      AutoPublishAlias: !Ref AuthorizerAlias
+      Layers:
+        - !Ref AuthLayer
+      Environment:
+        Variables:
+          ENVIRONMENT_ID: !Ref EnvironmentId
+          LOG_LEVEL: DEBUG
+          KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
+          AUTH_AWS_REGION: !Ref AWS::Region
+          AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
+      Tracing: Active
+
+
+  TestInLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${EnvironmentId}-TestInLambda
+      Handler: index.handlerTestIn
+      Runtime: nodejs16.x
+      CodeUri: ./dist
+      MemorySize: 512
+      Timeout: 20
+      Role: !Ref AuthRoleArn
+      AutoPublishAlias: !Ref AuthorizerAlias
+      Layers:
+        - !Ref AuthLayer
+      Environment:
+        Variables:
+          ENVIRONMENT_ID: !Ref EnvironmentId
+          LOG_LEVEL: DEBUG
+          KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
+          AUTH_AWS_REGION: !Ref AWS::Region
+          AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
+      Tracing: Active
+
+
+Outputs:
+    AuthorizerLambdaArn:
+        Description: Authorizer Lambda ARN
+        Value: !GetAtt AuthorizerLambda.Arn
+
+    LogInLambdaArn:
+        Description: LogIn Lambda ARN
+        Value: !GetAtt LogInLambda.Arn
+
+    TestInLambdaArn:
+        Description: TestIn Lambda ARN
+        Value: !GetAtt TestInLambda.Arn
+

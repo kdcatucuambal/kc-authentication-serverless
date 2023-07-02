@@ -6,14 +6,15 @@ ls -la
 
 packageVars=$(python3 scripts/python/parameters.py 'package')
 
-cd .stack/
+cd .stack/ || exit
+ls -la
 
-echo "[EXEC] sam package --template-file template.yaml ${packageVars} --output-template-file packaged.yaml"
+echo "[EXEC] sam package --template-file ../template.yaml ${packageVars} --output-template-file packaged.yaml"
 sam package --template-file ../template.yaml ${packageVars} --output-template-file packaged.yaml
 
 cd ../
 deployVars=$(python3 scripts/python/parameters.py 'deploy')
-cd .stack/
+cd .stack/ || exit
 #Sam deploy
 echo "[EXEC] sam deploy --template-file packaged.yaml ${deployVars}"
 sam deploy --template-file packaged.yaml ${deployVars}

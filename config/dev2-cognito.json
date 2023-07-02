@@ -8,7 +8,7 @@
     "pipeline": {
         "project": {
             "project-key": "kc-lab-serverless",
-            "path-service": "src",
+            "path-service": "kc-authentication-app",
             "backend-branch": "develop",
             "node-version": "v16.19.1"
         },

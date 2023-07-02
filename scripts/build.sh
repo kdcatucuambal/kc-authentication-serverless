@@ -3,6 +3,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 CURRENT_BRANCH=$(git branch --show-current)
+
 echo "Current branch: $CURRENT_BRANCH"
 #check if config.json exists
 if [ ! -f config/$CURRENT_BRANCH.json ]; then
@@ -29,11 +30,16 @@ echo "Init variables..."
 
 ENVIRONMENT_ID=$(jq -r '.parameters."EnvironmentId"' config.json)
 NODE_VERSION=$(jq -r '.pipeline.project."node-version"' config.json)
+PATH_SERVICE=$(jq -r '.pipeline.project."path-service"' config.json)
 
 echo "EnvironmentId: $ENVIRONMENT_ID"
 echo "Node version: $NODE_VERSION"
 
 cd ../
+
+cd "$PATH_SERVICE" || exit
+pwd
+ls -la
 
 echo "Checkout nodejs version..."
 
@@ -73,8 +79,8 @@ if [ $? -ne 0 ]; then
 fi
 
 mkdir -p layer/nodejs/ && cp package.json layer/nodejs/
-cd layer/nodejs/
+cd layer/nodejs/ || exit
 echo "[EXEC] npm install --production (nodejs layer)"
 npm install --production
 
-cd ../../
+cd ../../../

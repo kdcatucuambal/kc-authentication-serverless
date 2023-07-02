@@ -2,7 +2,7 @@
     "parameters": {
         "author": "Kevin Catucuamba",
         "email": "catucuambakevin@gmail.com",
-        "EnvironmentId": "dev1",
+        "EnvironmentId": "dev2-cog",
         "Module": "authentication"
     },
     "pipeline": {

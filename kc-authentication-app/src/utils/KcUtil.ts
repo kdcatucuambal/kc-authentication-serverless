@@ -1,5 +1,5 @@
 import {APIGatewayAuthorizerResult, APIGatewayTokenAuthorizerEvent} from "aws-lambda";
-
+import {CognitoJwtVerifier} from "aws-jwt-verify";
 
 const AWS_ACCOUNT = process.env.AUTH_AWS_ACCOUNT_ID;
 const AWS_REGION = process.env.AUTH_AWS_REGION;
@@ -12,7 +12,25 @@ export class KcUtil {
 
     static async validateToken(token: string): Promise<boolean> {
         //TODO: Implement token validation
-        return token === 'Bearer xyzuio';
+        const verifier = CognitoJwtVerifier.create({
+            userPoolId: "us-east-1_7W6X0n6v0",
+            tokenUse: "access",
+            clientId: "e7k34e1m5iiba69tablvlgl0j"
+        });
+
+        console.log("Token original: " + token);
+        token = token.replace("Bearer ", "");
+        console.log("Token to send: " + token);
+        try {
+            const response = await verifier.verify(token);
+            console.log("Validate token: " + JSON.stringify(response));
+            return true;
+        }catch (e) {
+            console.log("Error to validate token: " + e);
+            console.log(e);
+            return false;
+        }
+
     }
 
     static async generatePolicy(event: APIGatewayTokenAuthorizerEvent): Promise<APIGatewayAuthorizerResult> {

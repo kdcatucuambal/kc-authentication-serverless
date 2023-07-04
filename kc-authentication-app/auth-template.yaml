@@ -22,6 +22,14 @@ Parameters:
   AuthClientId:
     Type: String
     Description: Auth Client ID
+  
+  AuthSecretClient:
+    Type: String
+    Description: Auth Secret Client
+
+  AuthUserPoolId:
+    Type: String
+    Description: Auth User Pool ID
 
 Resources:
   AuthorizerLayer:
@@ -86,6 +94,8 @@ Resources:
         LogRetentionInDays: !Ref LogRetentionInDays
         AuthAwsRegion: !Ref AuthAwsRegion
         AuthClientId: !Ref AuthClientId
+        AuthSecretClient: !Ref AuthSecretClient
+        AuthUserPoolId: !Ref AuthUserPoolId
 
 Outputs:
   AuthorizerLayer:

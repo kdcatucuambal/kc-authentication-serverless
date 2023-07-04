@@ -39,6 +39,14 @@
         {
           "parameterKey": "AuthClientId",
           "parameterValue": "e7k34e1m5iiba69tablvlgl0j"
+        },
+        {
+          "parameterKey": "AuthSecretClient",
+          "parameterValue": "mgiu57vtgb1nm0d1d7liu7its7nq9g78gvbenqls5lu5utgqnmi"
+        },
+        {
+          "parameterKey": "AuthUserPoolId",
+          "parameterValue": "us-east-1_7W6X0n6v0"
         }
       ]
     }

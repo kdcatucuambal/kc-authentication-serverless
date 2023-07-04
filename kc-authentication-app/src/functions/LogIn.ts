@@ -11,7 +11,7 @@ export const handlerLogIn: KcRequestProxyEvent = async (event, context) => {
 
     const region = process.env.AUTH_AWS_REGION;
     const clientId = process.env.AUTH_CLIENT_ID;
-    const secretClient = "mgiu57vtgb1nm0d1d7liu7its7nq9g78gvbenqls5lu5utgqnmi";
+    const secretClient = process.env.AUTH_SECRET_CLIENT;
 
     const client = new CognitoIdentityProviderClient({region});
 
@@ -20,7 +20,6 @@ export const handlerLogIn: KcRequestProxyEvent = async (event, context) => {
 
     console.log("username: " + username);
     console.log("password: " + password);
-
 
     const hash = crypto.createHmac('sha256', secretClient).update(`${username}${clientId}`).digest('base64');
 

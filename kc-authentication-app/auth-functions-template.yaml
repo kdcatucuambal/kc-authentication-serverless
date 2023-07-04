@@ -31,6 +31,14 @@ Parameters:
     Type: String
     Description: Auth Client ID
 
+  AuthSecretClient:
+    Type: String
+    Description: Auth Secret Client
+
+  AuthUserPoolId:
+    Type: String
+    Description: Auth User Pool ID
+
 
 Resources:
   AuthApiGateway:
@@ -82,7 +90,10 @@ Resources:
           ENVIRONMENT_ID: !Ref EnvironmentId
           LOG_LEVEL: DEBUG
           KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
-          AUTH_AWS_REGION: !Ref AWS::Region
+          AUTH_AWS_REGION: !Ref AuthAwsRegion
+          AUTH_CLIENT_ID: !Ref AuthClientId
+          AUTH_SECRET_CLIENT: !Ref AuthSecretClient
+          AUTH_USER_POOL_ID: !Ref AuthUserPoolId
           AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
       Tracing: Active
 
@@ -114,6 +125,8 @@ Resources:
           KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
           AUTH_AWS_REGION: !Ref AuthAwsRegion
           AUTH_CLIENT_ID: !Ref AuthClientId
+          AUTH_SECRET_CLIENT: !Ref AuthSecretClient
+          AUTH_USER_POOL_ID: !Ref AuthUserPoolId
           AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
       Tracing: Active
       Events:

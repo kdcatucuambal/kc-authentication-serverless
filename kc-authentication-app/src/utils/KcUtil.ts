@@ -11,11 +11,14 @@ export class KcUtil {
     static PRINCIPAL_ID = "user|kcatucuamba";
 
     static async validateToken(token: string): Promise<boolean> {
-        //TODO: Implement token validation
+        
+        const userPoolId = process.env.AUTH_USER_POOL_ID;
+        const clientId = process.env.AUTH_CLIENT_ID;
+    
         const verifier = CognitoJwtVerifier.create({
-            userPoolId: "us-east-1_7W6X0n6v0",
+            userPoolId,
             tokenUse: "access",
-            clientId: "e7k34e1m5iiba69tablvlgl0j"
+            clientId
         });
 
         console.log("Token original: " + token);

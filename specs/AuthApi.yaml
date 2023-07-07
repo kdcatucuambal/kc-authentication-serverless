@@ -17,6 +17,8 @@ x-amazon-apigateway-request-validators:
 paths:
   /auth/login:
     post:
+      security:
+        - api_key: [ ]
       x-amazon-apigateway-request-validator: all
       summary: Log in a user and return a JWT
       description: |
@@ -399,3 +401,10 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: 'API key or aborts with Unauthorized'

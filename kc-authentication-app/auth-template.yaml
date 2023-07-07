@@ -82,6 +82,30 @@ Resources:
                 Resource: "*"
 
 
+
+  AuthenticationUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: !Sub ${EnvironmentId}-authentication-usage-plan
+      Description: Usage plan for authentication
+      ApiStages:
+        - ApiId: !GetAtt AuthenticationLambdas.Outputs.ApiId
+          Stage: !GetAtt AuthenticationLambdas.Outputs.ApiStage
+
+  AuthenticationApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Enabled: true
+      Name: !Sub ${EnvironmentId}-authentication-api-key
+
+  AuthenticationUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref AuthenticationApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref AuthenticationUsagePlan
+
+
   AuthenticationLambdas:
     Type: AWS::Serverless::Application
     Properties:
@@ -96,6 +120,7 @@ Resources:
         AuthClientId: !Ref AuthClientId
         AuthSecretClient: !Ref AuthSecretClient
         AuthUserPoolId: !Ref AuthUserPoolId
+
 
 Outputs:
   AuthorizerLayer:

@@ -1,10 +1,11 @@
 
-import {CognitoIdentityProviderClient, InitiateAuthCommand} from "@aws-sdk/client-cognito-identity-provider";
+import {CognitoIdentityProviderClient, InitiateAuthCommand, ChangePasswordCommand} from "@aws-sdk/client-cognito-identity-provider";
 import crypto from 'crypto';
 
 import {KcRequestProxyEvent} from "../models/Handler";
+import {AuthLoginResponse, AuthUserCredentials} from "../models/AuthLogin";
 
-export const handlerLogIn: KcRequestProxyEvent = async (event, context) => {
+export const handlerLogIn: KcRequestProxyEvent<AuthUserCredentials, AuthLoginResponse> = async (event, context) => {
     console.log('Event: ' + JSON.stringify(event));
     console.log('Context: ' + JSON.stringify(context));
 

@@ -3,6 +3,12 @@ export interface AuthUserCredentials {
     password: string
 }
 
+export interface AuthChangePassword {
+    previousPassword: string,
+    proposedPassword: string,
+    token: string
+}
+
 export interface AuthLoginResponse {
     idToken: string,
     accessToken: string,

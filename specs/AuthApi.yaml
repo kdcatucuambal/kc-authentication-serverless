@@ -200,6 +200,191 @@ paths:
                  #set($cause = $input.path('$.cause'))
                   $cause.errorMessage
 
+
+  /auth/change-password:
+    post:
+      security:
+        - api_key: [ ]
+      x-amazon-apigateway-request-validator: all
+      summary: Log in a user and return a JWT
+      description: |
+        Change password of a user
+      operationId: AuthChangePassword
+      parameters:
+        - $ref: '#/components/parameters/x-request-id'
+        - $ref: '#/components/parameters/x-ip-address'
+
+      requestBody:
+        description: |
+          The request body must be a JSON object with the following properties:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        201:
+          description: OK
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            x-jws-signature:
+              $ref: '#/components/headers/x-jws-signature'
+            Content-Language:
+              $ref: '#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+        400:
+          $ref: '#/components/responses/Response400'
+        401:
+          $ref: '#/components/responses/Response401'
+        403:
+          $ref: '#/components/responses/Response403'
+        404:
+          $ref: '#/components/responses/Response404'
+        409:
+          $ref: '#/components/responses/Response409'
+        429:
+          $ref: '#/components/responses/Response429'
+        500:
+          $ref: '#/components/responses/Response500'
+
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri:
+          Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ChangePasswordLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "header": {
+                "aws_request_id": "$context.requestId",
+                "x_authorization": "$input.params().header.get('Authorization')",
+                "x_request_id": "$input.params().header.get('x-request-id')",
+                "x_ip_address": "$input.params().header.get('x-ip-address')"
+              },
+              "body" : $input.json('$'),
+              "getBody": {
+                "queries":{
+                  #foreach($param in $input.params().querystring.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
+                  #end
+                },
+                "params": {
+                  #foreach($param in $input.params().path.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
+                  #end
+                }
+              },
+              "service": {
+                "apiId": "$context.apiId",
+                "operationId": "AuthLogIn"
+              }
+            }
+        responses:
+          default:
+            statusCode: 201
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                $input.json('$.body')
+          400:
+            statusCode: 400
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+          401:
+            statusCode: 401
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "No se encuentra autorizado para realizar la operación."}
+
+          403:
+            statusCode: 403
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La solicitud ha sido rechazada."}
+
+          404:
+            statusCode: 404
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El objeto no fue encontrado."}
+
+          409:
+            statusCode: 409
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La operación presentó un error durante la ejecución. :)"}
+
+          429:
+            statusCode: 429
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "Se ha excedido el número de solicitudes permitidas."}
+
+          500|.*timed.*:
+            statusCode: 500
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                #set($cause = $input.path('$.cause'))
+                 $cause.errorMessage
+
 components:
   schemas:
     AuthLogInRequest:
@@ -235,6 +420,23 @@ components:
         message:
           type: string
           description: "The error message"
+    AuthChangePasswordRequest:
+      type: object
+      properties:
+        previousPassword:
+          type: string
+          minLength: 8
+          maxLength: 20
+        proposedPassword:
+          type: string
+          minLength: 8
+          maxLength: 20
+        token:
+          type: string
+      required:
+        - previousPassword
+        - proposedPassword
+        - token
 
   headers:
     Content-Language:

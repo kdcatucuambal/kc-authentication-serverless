@@ -152,6 +152,53 @@ Resources:
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
 
 
+
+  ChangePasswordLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${EnvironmentId}-ChangePasswordLambda
+      Handler: index.handlerChangePassword
+      Runtime: nodejs16.x
+      CodeUri: ./dist
+      MemorySize: 512
+      Timeout: 20
+      Role: !Ref AuthRoleArn
+      AutoPublishAlias: !Ref LambdaAliasProduction
+      Layers:
+        - !Ref AuthLayer
+      Environment:
+        Variables:
+          ENVIRONMENT_ID: !Ref EnvironmentId
+          LOG_LEVEL: DEBUG
+          KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
+          AUTH_AWS_REGION: !Ref AuthAwsRegion
+          AUTH_CLIENT_ID: !Ref AuthClientId
+          AUTH_SECRET_CLIENT: !Ref AuthSecretClient
+          AUTH_USER_POOL_ID: !Ref AuthUserPoolId
+          AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
+      Tracing: Active
+      Events:
+        EventApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AuthApiGateway
+            Path: /auth/change-password
+            Method: post
+
+  ChangePasswordLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ChangePasswordLambda}"
+      RetentionInDays: !Ref LogRetentionInDays
+
+  ChangePasswordProductionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub "${ChangePasswordLambda}:${LambdaAliasProduction}"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
+
   TestInLambda:
     Type: AWS::Serverless::Function
     Properties:

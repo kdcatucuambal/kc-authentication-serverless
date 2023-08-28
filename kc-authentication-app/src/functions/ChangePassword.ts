@@ -1,24 +1,27 @@
 import {KcRequestProxyEvent} from "../models/Handler";
 import {AuthChangePassword} from "../models/AuthLogin";
-import {CognitoIdentityProviderClient, ChangePasswordCommand} from "@aws-sdk/client-cognito-identity-provider";
+import {CognitoIdentityProviderClient, AdminSetUserPasswordCommand, AdminSetUserPasswordRequest} from "@aws-sdk/client-cognito-identity-provider";
 
-export const ChangePassword: KcRequestProxyEvent<AuthChangePassword, string> = async (event, context)=>{
+export const handlerChangePassword: KcRequestProxyEvent<AdminSetUserPasswordRequest, string> = async (event, context)=>{
     console.log('Event: ' + JSON.stringify(event));
     console.log('Context: ' + JSON.stringify(context));
-const {previousPassword, proposedPassword, token} =  event.body;
-    console.log('previos password: ' + previousPassword);
-    console.log('proposed password: ' + proposedPassword);
-    console.log('token: ' + token);
+    const {Password, Permanent, UserPoolId,Username} =  event.body;
+
 
     const region = process.env.AUTH_AWS_REGION;
 
+
+
     const client = new CognitoIdentityProviderClient({region});
 
-    const command = new ChangePasswordCommand({
-        AccessToken: token,
-        PreviousPassword: previousPassword,
-        ProposedPassword: proposedPassword
-    });
+    const command = new AdminSetUserPasswordCommand({
+        Password,
+        Permanent,
+        UserPoolId,
+        Username
+    })
+
+
 
     try {
         const response = await client.send(command);

@@ -4,6 +4,7 @@ import crypto from 'crypto';
 
 import {KcRequestProxyEvent} from "../models/Handler";
 import {AuthLoginResponse, AuthUserCredentials} from "../models/AuthLogin";
+import { json } from "stream/consumers";
 
 export const handlerLogIn: KcRequestProxyEvent<AuthUserCredentials, AuthLoginResponse> = async (event, context) => {
     console.log('Event: ' + JSON.stringify(event));
@@ -36,7 +37,7 @@ export const handlerLogIn: KcRequestProxyEvent<AuthUserCredentials, AuthLoginRes
 
     try {
         const response = await client.send(command);
-        response.AuthenticationResult
+        console.log("RESPONSE = " + JSON.stringify(response));
         if (!response.AuthenticationResult) {
             //Authentication failed
             throw new Error("Authentication failed");

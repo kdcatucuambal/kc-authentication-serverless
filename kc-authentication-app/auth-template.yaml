@@ -79,6 +79,7 @@ Resources:
                   - "xray:GetSamplingRules"
                   - "xray:GetSamplingTargets"
                   - "xray:GetSamplingStatisticSummaries"
+                  - "cognito-idp:AdminSetUserPassword"
                 Resource: "*"
 
 

@@ -7,9 +7,6 @@ export const handlerChangePassword: KcRequestProxyEvent<AdminSetUserPasswordRequ
     console.log('Context: ' + JSON.stringify(context));
 
     const {username, permanent, password, userPoolId} = event.body;
-
-
-
     const region = process.env.AUTH_AWS_REGION;
 
     const client = new CognitoIdentityProviderClient({region});

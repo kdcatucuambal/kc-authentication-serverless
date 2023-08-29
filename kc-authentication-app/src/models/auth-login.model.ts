@@ -11,9 +11,12 @@ export interface AuthChangePassword {
 
 
 export interface AuthLoginResponse {
-    idToken: string,
-    accessToken: string,
-    refreshToken: string,
+    statusMessage: string,
+    credentials?:{
+        idToken: string,
+        accessToken: string,
+        refreshToken: string,
+    }
 }
 
 export interface AdminSetUserPasswordRequest{

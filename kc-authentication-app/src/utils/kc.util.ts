@@ -25,7 +25,7 @@ export class KcUtil {
         token = token.replace("Bearer ", "");
         console.log("Token to send: " + token);
         try {
-            const response = await verifier.verify(token);
+            const response = await verifier.verify(token as any);
             console.log("Validate token: " + JSON.stringify(response));
             return true;
         }catch (e) {

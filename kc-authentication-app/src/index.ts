@@ -1,7 +1,7 @@
-import {handlerAuthorizer} from "./functions/Authorizer";
-import {handlerLogIn} from "./functions/LogIn";
-import {handlerTestIn} from "./functions/TestIn";
-import {handlerChangePassword} from "./functions/ChangePassword";
+import {handlerAuthorizer} from "./functions/authorizer.lambda";
+import {handlerLogIn} from "./functions/log-in.lambda";
+import {handlerTestIn} from "./functions/test-in.lambda";
+import {handlerChangePassword} from "./functions/change-password-ftime.lambda";
 
 export {
     handlerAuthorizer,

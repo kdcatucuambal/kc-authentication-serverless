@@ -1,6 +1,6 @@
-import {RequestObject, ResponseObject} from "./RequestObject";
+import {RequestObjectModel, ResponseObject} from "./request-object.model";
 import {Context} from "aws-lambda";
 
 export type KcRequestProxyEvent<T, R> = (
-    event: RequestObject<T>,
+    event: RequestObjectModel<T>,
     context: Context) => Promise<ResponseObject<R>>

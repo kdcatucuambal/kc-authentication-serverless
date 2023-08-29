@@ -1,4 +1,4 @@
-import {KcUtil} from "../utils/KcUtil";
+import {KcUtil} from "../utils/kc.util";
 
 const token = "Bearer xyzuio";
 const method = "arn:aws:execute-api:us-east-1:818802851925:vo2kc7iwr2/v1/GET/labs/balances/AB-1123";

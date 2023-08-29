@@ -1,4 +1,4 @@
-export interface RequestObject<T>{
+export interface RequestObjectModel<T>{
     header: Record<string, string>,
     body: T,
     getBody:{

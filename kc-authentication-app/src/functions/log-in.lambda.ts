@@ -2,8 +2,8 @@
 import {CognitoIdentityProviderClient, InitiateAuthCommand, ChangePasswordCommand} from "@aws-sdk/client-cognito-identity-provider";
 import crypto from 'crypto';
 
-import {KcRequestProxyEvent} from "../models/Handler";
-import {AuthLoginResponse, AuthUserCredentials} from "../models/AuthLogin";
+import {KcRequestProxyEvent} from "../models/handler.model";
+import {AuthLoginResponse, AuthUserCredentials} from "../models/auth-login.model";
 import { json } from "stream/consumers";
 
 export const handlerLogIn: KcRequestProxyEvent<AuthUserCredentials, AuthLoginResponse> = async (event, context) => {
@@ -41,6 +41,7 @@ export const handlerLogIn: KcRequestProxyEvent<AuthUserCredentials, AuthLoginRes
         if (!response.AuthenticationResult) {
             //Authentication failed
             throw new Error("Authentication failed");
+            
         }
         return {
             statusCode: 201,

@@ -38,7 +38,7 @@ Resources:
       LayerName: !Sub ${EnvironmentId}-authentication-layer
       ContentUri: ./layer
       CompatibleRuntimes:
-        - nodejs16.x
+        - nodejs18.x
       CompatibleArchitectures:
         - x86_64
       LicenseInfo: MIT

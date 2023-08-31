@@ -197,8 +197,8 @@ paths:
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
-                 #set($cause = $input.path('$.detail'))
-                 $input.json('$.')
+                 {"message": "Error interno del servidor."}
+
 
 
   /auth/change-password:
@@ -402,6 +402,15 @@ components:
     AuthLogInResponse:
       type: object
       properties:
+        credentials:
+          $ref: "#/components/schemas/AuthLoginCredentials"
+        statusMessage:
+          type: string
+
+    
+    AuthLoginCredentials:
+      type: object
+      properties:
         accessToken:
           type: string
           format: jwt
@@ -414,6 +423,7 @@ components:
         - accessToken
         - refreshToken
         - idToken
+
     ErrorResponse:
       type: object
       properties:

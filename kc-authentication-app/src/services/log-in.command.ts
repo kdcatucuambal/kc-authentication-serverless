@@ -4,8 +4,6 @@ import {AuthLoginResponse, AuthUserCredentials} from "../models/auth-login.model
 import {loggerUtil as log} from "../utils/logger.util";
 import crypto from "crypto";
 import {HttpStatusCode} from "axios";
-import {CustomError} from "../exceptions/custom.error";
-
 export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredentials): Promise<AuthLoginResponse> => {
 
     const [region, clientId, secretClient] = EnvUtil.getObjectEnvVarOrThrow(
@@ -32,12 +30,7 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
 
     try {
         const response = await client.send(command);
-        log.info("RESPONSE = " + JSON.stringify(response));
-        if (response.$metadata.httpStatusCode !== 200 && response.$metadata.httpStatusCode !== 201) {
-            log.info("Authentication failed: Code 500")
-            throw new Error(response.$metadata.httpStatusCode.toString());
-        }
-
+        log.info("Initiate auth command response: " + JSON.stringify(response));
         if (!response.AuthenticationResult && response.ChallengeName === "NEW_PASSWORD_REQUIRED") {
             log.info("Authentication failed: Code 401")
             return {
@@ -57,7 +50,16 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
 
     } catch (error) {
         log.info("Error to authenticate (catch): " + error);
-        throw new CustomError(HttpStatusCode.InternalServerError.toString(), error);
+        log.info("Error to authenticate (catch): " + JSON.stringify(error));
+        console.log("Console log:" + error);
+        const errorResponse = {
+            status: 500,
+            body: "Hay muchos errores",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }
+        throw new Error(HttpStatusCode.InternalServerError.toString());
     } finally {
         client.destroy();
     }

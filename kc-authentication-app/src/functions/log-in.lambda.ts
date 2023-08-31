@@ -3,6 +3,7 @@
 import {KcRequestProxyEvent} from "../models/handler.model";
 import {AuthLoginResponse, AuthUserCredentials} from "../models/auth-login.model";
 import {LogInCommandExecutor} from "../services/log-in.command";
+import {HttpStatusCode} from "axios";
 
 
 export const handlerLogIn: KcRequestProxyEvent<AuthUserCredentials, AuthLoginResponse> = async(event, context) => {
@@ -11,8 +12,8 @@ export const handlerLogIn: KcRequestProxyEvent<AuthUserCredentials, AuthLoginRes
     const authLoginResponse = await LogInCommandExecutor(event.body);
     return {
         body: authLoginResponse,
-        statusCode: 201,
-        headers:{}
+        statusCode: HttpStatusCode.Created,
+        headers: {}
     }
 }
 

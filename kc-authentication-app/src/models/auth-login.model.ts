@@ -25,3 +25,8 @@ export interface AdminSetUserPasswordRequest{
     userPoolId: string,
     username: string
 }
+
+export interface AdminSetUserPasswordResponse{
+    statusHttpCommand: number,
+    message: string
+}

@@ -1,39 +1,25 @@
 import {KcRequestProxyEvent} from "../models/handler.model";
-import {AdminSetUserPasswordRequest, AuthChangePassword} from "../models/auth-login.model";
-import {CognitoIdentityProviderClient, AdminSetUserPasswordCommand} from "@aws-sdk/client-cognito-identity-provider";
+import {AdminSetUserPasswordRequest, AdminSetUserPasswordResponse} from "../models/auth-login.model";
+import {changePwdFirstTimeCommandExecutor} from "../services/change-pwd-ftime.command";
+import {HttpStatusCode} from "axios";
+import {loggerUtil as log} from "../utils/logger.util";
 
-export const handlerChangePassword: KcRequestProxyEvent<AdminSetUserPasswordRequest, string> = async (event, context)=>{
-    console.log('Event: ' + JSON.stringify(event));
-    console.log('Context: ' + JSON.stringify(context));
+export const handlerChangePassword: KcRequestProxyEvent<
+    AdminSetUserPasswordRequest,
+    AdminSetUserPasswordResponse> = async (event, context)=>{
 
-    const {username, permanent, password, userPoolId} = event.body;
-    const region = process.env.AUTH_AWS_REGION;
+    log.info('Event: ' + JSON.stringify(event));
+    log.info('Context: ' + JSON.stringify(context));
 
-    const client = new CognitoIdentityProviderClient({region});
+    const httpCodeCmd = await changePwdFirstTimeCommandExecutor(event.body);
 
-    const command = new AdminSetUserPasswordCommand({
-        Password: password,
-        Permanent: permanent,
-        UserPoolId: userPoolId,
-        Username: username
-    });
-
-    try {
-        const response = await client.send(command);
-        console.log(response);
-        return {
-            statusCode: 201,
-            body: "Password changed successfully",
-            headers: {
-                "roadmap": "kc-authentication-app",
-            }
-        };
-
-    } catch(error)
-    {
-        console.log(error);
-        throw error;
-    } finally {
-        client.destroy();
+    return {
+        body: {
+            statusHttpCommand: httpCodeCmd,
+            message: "Password changed successfully"
+        },
+        statusCode: HttpStatusCode.Created,
+        headers: {}
     }
+
 }

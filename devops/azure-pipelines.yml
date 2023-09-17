@@ -4,7 +4,7 @@ parameters:
     default: 'kc-labs-app'
   - name: DOCKER_IMAGE
     type: string
-    default: 'kevdev105030/osnebula:20230917205330'
+    default: 'kevdev105030/osnebula:20230917210615'
   - name: PROJECT_TYPE
     type: string
     default: 'node_serverless'

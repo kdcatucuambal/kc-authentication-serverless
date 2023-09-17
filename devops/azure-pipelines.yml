@@ -14,12 +14,18 @@ pool: 'Azure Pipelines'
 variables:
   - group: GENERAL_DEVOPS
 
+trigger:
+  branches:
+    include:
+      - develop
+
+
 resources:
   repositories:
     - repository: templates
       type: git
       name: 'kc-cloud-devops'
-      ref: 'dev1'
+      ref: 'refs/tags/v0.0.1'
 
 stages:
   - template: templates/stages/microserviceStage.yml@templates

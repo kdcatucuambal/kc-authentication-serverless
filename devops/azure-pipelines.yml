@@ -4,7 +4,7 @@ parameters:
     default: 'kc-labs-app'
   - name: DOCKER_IMAGE
     type: string
-    default: 'kevdev105030/osnebula:20230917210615'
+    default: 'kevdev105030/osnebula:20230930145215'
   - name: PROJECT_TYPE
     type: string
     default: 'node_serverless'
@@ -25,7 +25,7 @@ resources:
     - repository: templates
       type: git
       name: 'kc-cloud-devops'
-      ref: 'refs/tags/v0.0.1'
+      ref: 'refs/tags/v0.0.2'
 
 stages:
   - template: templates/stages/microserviceStage.yml@templates

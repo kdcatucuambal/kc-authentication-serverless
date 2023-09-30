@@ -44,3 +44,8 @@ Resources:
         AuthClientId: !Ref AuthClientId
         AuthSecretClient: !Ref AuthSecretClient
         AuthUserPoolId: !Ref AuthUserPoolId
+
+Outputs:
+  AuthorizerLambdaName:
+    Description: Authorizer Lambda Name
+    Value: !GetAtt AuthenticationInfrastructure.Outputs.AuthorizerLambdaName

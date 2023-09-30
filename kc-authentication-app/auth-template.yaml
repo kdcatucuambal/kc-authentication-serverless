@@ -127,6 +127,9 @@ Outputs:
   AuthorizerLayer:
     Description: Authorizer Lambda Layer
     Value: !Ref AuthorizerLayer
+  AuthorizerLambdaName:
+    Description: Authorizer Lambda Name
+    Value: !GetAtt AuthenticationLambdas.Outputs.AuthorizerLambdaName
   AuthorizerRole:
     Description: Authorizer Lambda Role
     Value: !Ref AuthorizerRole

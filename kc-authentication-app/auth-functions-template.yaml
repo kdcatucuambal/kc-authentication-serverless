@@ -227,6 +227,10 @@ Outputs:
     Description: Authorizer Lambda ARN
     Value: !GetAtt AuthorizerLambda.Arn
 
+  AuthorizerLambdaName:
+    Description: Authorizer Lambda Name
+    Value: !Ref AuthorizerLambda
+
   LogInLambdaArn:
     Description: LogIn Lambda ARN
     Value: !GetAtt LogInLambda.Arn

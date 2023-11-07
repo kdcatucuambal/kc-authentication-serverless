@@ -4,6 +4,7 @@ import {AuthLoginResponse, AuthUserCredentials} from "../models/auth-login.model
 import {loggerUtil as log} from "../utils/logger.util";
 import crypto from "crypto";
 import {HttpStatusCode} from "axios";
+
 export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredentials): Promise<AuthLoginResponse> => {
 
     const [region, clientId, secretClient] = EnvUtil.getObjectEnvVarOrThrow(

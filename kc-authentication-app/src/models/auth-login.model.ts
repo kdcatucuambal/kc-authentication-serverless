@@ -26,6 +26,16 @@ export interface AdminSetUserPasswordRequest{
     username: string
 }
 
+export interface AuthChangePasswordV2Rq{
+    authentication: {
+        login: string
+    },
+    session: string,
+    newPassword: string
+}
+
+
+
 export interface AdminSetUserPasswordResponse{
     statusHttpCommand: number,
     message: string

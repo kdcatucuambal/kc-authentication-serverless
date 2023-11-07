@@ -6,7 +6,7 @@ import {loggerUtil as log} from "../utils/logger.util";
 
 export const handlerChangePassword: KcRequestProxyEvent<
     AdminSetUserPasswordRequest,
-    AdminSetUserPasswordResponse> = async (event, context)=>{
+    AdminSetUserPasswordResponse> = async (event, context) => {
 
     log.info('Event: ' + JSON.stringify(event));
     log.info('Context: ' + JSON.stringify(context));

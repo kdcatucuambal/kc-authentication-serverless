@@ -3,7 +3,8 @@ import {loggerUtil as log} from "../utils/logger.util";
 import {AdminSetUserPasswordCommand, CognitoIdentityProviderClient} from "@aws-sdk/client-cognito-identity-provider";
 import {HttpStatusCode} from "axios";
 import {EnvUtil} from "../utils/env.util";
-export const changePwdFirstTimeCommandExecutor = async(adminSetUserPwdRq: AdminSetUserPasswordRequest) => {
+
+export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: AdminSetUserPasswordRequest) => {
 
     const {username, password} = adminSetUserPwdRq;
 
@@ -27,7 +28,7 @@ export const changePwdFirstTimeCommandExecutor = async(adminSetUserPwdRq: AdminS
         const response = await client.send(command);
         log.info("Response AdminSetUserPasswordCommand: " + JSON.stringify(response));
         return response.$metadata.httpStatusCode ?? HttpStatusCode.InternalServerError;
-    }catch (e) {
+    } catch (e) {
         log.error("Error to change password: " + e);
         log.error(e);
         throw new Error(HttpStatusCode.InternalServerError.toString());

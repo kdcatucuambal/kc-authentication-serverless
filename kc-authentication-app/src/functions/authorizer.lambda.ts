@@ -10,9 +10,9 @@ export const handlerAuthorizer: APIGatewayTokenAuthorizerHandler = async (event,
     loggerUtil.info('Context: ' + JSON.stringify(context));
 
     const policy = await KcUtil.generatePolicy(event);
-    
+
     loggerUtil.info('Policy generated: ' + JSON.stringify(policy));
-    
+
     return policy;
 
 }

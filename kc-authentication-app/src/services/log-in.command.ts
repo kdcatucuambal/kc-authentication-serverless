@@ -4,6 +4,7 @@ import {AuthLoginRs, AuthUserCredentials} from "../models/auth-login.model";
 import {loggerUtil as log} from "../utils/logger.util";
 import crypto from "crypto";
 import {HttpStatusCode} from "axios";
+import {KcUtil} from "../utils/kc.util";
 
 export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredentials): Promise<AuthLoginRs> => {
 
@@ -17,7 +18,8 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
     log.info("username: " + username);
     log.info("password: " + password);
 
-    const hash = crypto.createHmac('sha256', secretClient).update(`${username}${clientId}`).digest('base64');
+    const hash = await KcUtil.generateSecretHash(username);
+    log.info("Hash: " + hash)
 
     const command = new InitiateAuthCommand({
         AuthFlow: "USER_PASSWORD_AUTH",
@@ -45,7 +47,8 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
                 idToken: response.AuthenticationResult.IdToken,
                 accessToken: response.AuthenticationResult.AccessToken,
                 refreshToken: response.AuthenticationResult.RefreshToken
-            }
+            },
+            session: response.Session
         }
 
 

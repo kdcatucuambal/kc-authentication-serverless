@@ -1,5 +1,7 @@
 import {APIGatewayAuthorizerResult, APIGatewayTokenAuthorizerEvent} from "aws-lambda";
 import {CognitoJwtVerifier} from "aws-jwt-verify";
+import crypto from "crypto";
+import {EnvUtil} from "./env.util";
 
 const AWS_ACCOUNT = process.env.AUTH_AWS_ACCOUNT_ID;
 const AWS_REGION = process.env.AUTH_AWS_REGION;
@@ -11,10 +13,10 @@ export class KcUtil {
     static PRINCIPAL_ID = "user|kcatucuamba";
 
     static async validateToken(token: string): Promise<boolean> {
-        
+
         const userPoolId = process.env.AUTH_USER_POOL_ID;
         const clientId = process.env.AUTH_CLIENT_ID;
-    
+
         const verifier = CognitoJwtVerifier.create({
             userPoolId,
             tokenUse: "access",
@@ -28,7 +30,7 @@ export class KcUtil {
             const response = await verifier.verify(token as any);
             console.log("Validate token: " + JSON.stringify(response));
             return true;
-        }catch (e) {
+        } catch (e) {
             console.log("Error to validate token: " + e);
             console.log(e);
             return false;
@@ -48,6 +50,12 @@ export class KcUtil {
         return await KcUtil.createPolicy(KcUtil.PRINCIPAL_ID, KcUtil.ALLOW_TEXT, resource);
     }
 
+
+    static async generateSecretHash(login: string) {
+        const [clientId, secretClient] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID', 'AUTH_SECRET_CLIENT']);
+        return crypto.createHmac('sha256', secretClient)
+            .update(`${login}${clientId}`).digest('base64');
+    }
 
     static async createPolicy(
         principalId: string,

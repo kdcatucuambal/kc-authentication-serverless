@@ -16,7 +16,8 @@ export interface AuthLoginRs {
         idToken: string,
         accessToken: string,
         refreshToken: string,
-    }
+    },
+    session?: string
 }
 
 export interface AdminSetUserPasswordRq{
@@ -38,5 +39,21 @@ export interface AuthChangePasswordV2Rq{
 
 export interface AdminSetUserPasswordRs{
     statusHttpCommand: number,
+    message: string
+}
+
+export interface SignUpRq{
+    username: string,
+    password: string,
+    attributes: {
+        email: string,
+        phoneNumber: string,
+        "name": string,
+        "lastName": string
+    }
+}
+
+export interface SignUpRs{
+    username: string,
     message: string
 }

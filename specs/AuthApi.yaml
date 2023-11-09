@@ -567,7 +567,7 @@ paths:
                 #set($res = $input.path('$'))
                 #set($cause = $input.path('$.cause'))
                  $cause.errorMessage
-  /auth/signup:
+  /auth/sign-up:
     post:
       security:
         - api_key: [ ]

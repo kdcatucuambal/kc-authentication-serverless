@@ -241,7 +241,7 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !Sub "${ChangePasswordLambda}:${LambdaAliasProduction}"
+      FunctionName: !Sub "${ChangePasswordV2Lambda}:${LambdaAliasProduction}"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
 
@@ -274,7 +274,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref AuthApiGateway
-            Path: /auth/signup
+            Path: /auth/sign-up
             Method: post
 
   SignUpLogGroup:
@@ -287,7 +287,7 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !Sub "${ChangePasswordLambda}:${LambdaAliasProduction}"
+      FunctionName: !Sub "${SignUpLambda}:${LambdaAliasProduction}"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
 

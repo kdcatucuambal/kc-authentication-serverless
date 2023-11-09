@@ -18,6 +18,7 @@ trigger:
   branches:
     include:
       - develop
+      - dev2
 
 
 resources:

@@ -274,7 +274,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref AuthApiGateway
-            Path: /auth/sign-up
+            Path: /auth/signup
             Method: post
 
   SignUpLogGroup:

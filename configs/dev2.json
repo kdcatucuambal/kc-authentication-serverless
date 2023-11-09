@@ -1,0 +1,55 @@
+{
+  "parameters": {
+    "author": "Kevin Catucuamba",
+    "email": "catucuambakevin@gmail.com",
+    "EnvironmentId": "dev2",
+    "Module": "authentication",
+    "SummaryDevelop": "Implementing authentication with AWS Cognito V2"
+  },
+  "pipeline": {
+    "project": {
+      "project-key": "kc-lab-serverless",
+      "path-service": "kc-authentication-app",
+      "backend-branch": "develop",
+      "node-version": "v18.17.0"
+    },
+    "deploy": {
+      "stack-name": "${EnvironmentId}-${Module}-serverless",
+      "s3-bucket": "dev1-kc-authorizer",
+      "prefix": "${EnvironmentId}",
+      "aws-default-region": "us-east-1",
+      "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+      "non-confirm-change-set": "true",
+      "parameters": [
+        {
+          "parameterKey": "EnvironmentId",
+          "parameterValue": "${EnvironmentId}"
+        },
+        {
+          "parameterKey": "AuthorizerAlias",
+          "parameterValue": "production"
+        },
+        {
+          "parameterKey": "LogRetentionInDays",
+          "parameterValue": "7"
+        },
+        {
+          "parameterKey": "AuthAwsRegion",
+          "parameterValue": "us-east-1"
+        },
+        {
+          "parameterKey": "AuthClientId",
+          "parameterValue": "e7k34e1m5iiba69tablvlgl0j"
+        },
+        {
+          "parameterKey": "AuthSecretClient",
+          "parameterValue": "mgiu57vtgb1nm0d1d7liu7its7nq9g78gvbenqls5lu5utgqnmi"
+        },
+        {
+          "parameterKey": "AuthUserPoolId",
+          "parameterValue": "us-east-1_7W6X0n6v0"
+        }
+      ]
+    }
+  }
+}

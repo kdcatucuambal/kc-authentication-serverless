@@ -1,12 +1,12 @@
 import {KcRequestProxyEvent} from "../models/handler.model";
-import {AdminSetUserPasswordRequest, AdminSetUserPasswordResponse} from "../models/auth-login.model";
+import {AdminSetUserPasswordRq, AdminSetUserPasswordRs} from "../models/auth-login.model";
 import {changePwdFirstTimeCommandExecutor} from "../services/change-pwd-ftime.command";
 import {HttpStatusCode} from "axios";
 import {loggerUtil as log} from "../utils/logger.util";
 
 export const handlerChangePassword: KcRequestProxyEvent<
-    AdminSetUserPasswordRequest,
-    AdminSetUserPasswordResponse> = async (event, context) => {
+    AdminSetUserPasswordRq,
+    AdminSetUserPasswordRs> = async (event, context) => {
 
     log.info('Event: ' + JSON.stringify(event));
     log.info('Context: ' + JSON.stringify(context));

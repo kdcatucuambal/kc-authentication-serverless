@@ -1,10 +1,10 @@
-import {AdminSetUserPasswordRequest} from "../models/auth-login.model";
+import {AdminSetUserPasswordRq} from "../models/auth-login.model";
 import {loggerUtil as log} from "../utils/logger.util";
 import {AdminSetUserPasswordCommand, CognitoIdentityProviderClient} from "@aws-sdk/client-cognito-identity-provider";
 import {HttpStatusCode} from "axios";
 import {EnvUtil} from "../utils/env.util";
 
-export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: AdminSetUserPasswordRequest) => {
+export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: AdminSetUserPasswordRq) => {
 
     const {username, password} = adminSetUserPwdRq;
 

@@ -10,7 +10,7 @@ export interface AuthChangePassword {
 }
 
 
-export interface AuthLoginResponse {
+export interface AuthLoginRs {
     statusMessage: string,
     credentials?:{
         idToken: string,
@@ -19,7 +19,7 @@ export interface AuthLoginResponse {
     }
 }
 
-export interface AdminSetUserPasswordRequest{
+export interface AdminSetUserPasswordRq{
     password: string,
     permanent: boolean,
     userPoolId: string,
@@ -36,7 +36,7 @@ export interface AuthChangePasswordV2Rq{
 
 
 
-export interface AdminSetUserPasswordResponse{
+export interface AdminSetUserPasswordRs{
     statusHttpCommand: number,
     message: string
 }

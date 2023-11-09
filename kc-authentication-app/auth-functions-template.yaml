@@ -203,7 +203,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub ${EnvironmentId}-ChangePasswordV2Lambda
-      Handler: index.handlerChangePassword
+      Handler: index.handlerChangePasswordV2
       Runtime: nodejs18.x
       CodeUri: ./dist
       MemorySize: 512

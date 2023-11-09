@@ -6,7 +6,7 @@ import {
 import {loggerUtil as log} from "../utils/logger.util";
 
 import {HttpStatusCode} from "axios";
-import {changePwdFirstTimeV2CommandExecutor} from "../services/change-pwd-ftime-v2.command";
+import {changePwdFirstTimeV2CommandExecutor} from "../services/change-pwd-v2.command";
 
 export const handlerChangePasswordV2:
     KcRequestProxyEvent<AuthChangePasswordV2Rq, AdminSetUserPasswordRs> = async (event, context) => {

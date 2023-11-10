@@ -1,8 +1,8 @@
 import {EnvUtil} from "../utils/env.util";
 import {
-    CognitoIdentityProviderClient,
     InitiateAuthCommand,
-    InitiateAuthCommandInput as Input, InitiateAuthCommandOutput as Output
+    InitiateAuthCommandInput as Input,
+    InitiateAuthCommandOutput as Output
 } from "@aws-sdk/client-cognito-identity-provider";
 import {AuthLoginRs, AuthUserCredentials} from "../models/auth-login.model";
 import {loggerUtil as log} from "../utils/logger.util";
@@ -33,7 +33,6 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
         }
     });
 
-    // const cognitoClient = await KcUtil.createCognitoClient();
     const response = await CognitoUtil.executeCommand<Input, Output>(command);
     log.info("Initiate auth command response: " + JSON.stringify(response));
 
@@ -59,44 +58,4 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
         },
         session: response.result.Session
     }
-
-
-    // try {
-    //     const response = await cognitoClient.send(command);
-    //     log.info("Initiate auth command response: " + JSON.stringify(response));
-    //     if (!response.AuthenticationResult && response.ChallengeName === "NEW_PASSWORD_REQUIRED") {
-    //         log.info("Authentication failed: Code 401")
-    //         return {
-    //             statusMessage: "It is necessary to change the password",
-    //             credentials: null
-    //         }
-    //     }
-    //     return {
-    //         statusMessage: "Authentication successful",
-    //         credentials: {
-    //             idToken: response.AuthenticationResult.IdToken,
-    //             accessToken: response.AuthenticationResult.AccessToken,
-    //             refreshToken: response.AuthenticationResult.RefreshToken
-    //         },
-    //         session: response.Session
-    //     }
-    //
-    //
-    // } catch (error) {
-    //     log.info("Error to authenticate (catch): " + error);
-    //     log.info("Error to authenticate (catch): " + JSON.stringify(error));
-    //     console.log("Console log:" + error);
-    //     const errorResponse = {
-    //         status: 500,
-    //         body: "Hay muchos errores",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         }
-    //     }
-    //     throw new Error(HttpStatusCode.InternalServerError.toString());
-    // } finally {
-    //     cognitoClient.destroy();
-    // }
-
-
 }

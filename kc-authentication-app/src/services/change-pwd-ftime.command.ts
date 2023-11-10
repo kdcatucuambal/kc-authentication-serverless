@@ -3,12 +3,10 @@ import {loggerUtil as log} from "../utils/logger.util";
 import {
     AdminSetUserPasswordCommand,
     AdminSetUserPasswordCommandInput as Input,
-    AdminSetUserPasswordCommandOutput as Output,
-    CognitoIdentityProviderClient
+    AdminSetUserPasswordCommandOutput as Output
 } from "@aws-sdk/client-cognito-identity-provider";
 import {HttpStatusCode} from "axios";
 import {EnvUtil} from "../utils/env.util";
-import {KcUtil} from "../utils/kc.util";
 import {CognitoUtil} from "../utils/cognito.util";
 
 export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: AdminSetUserPasswordRq) => {
@@ -38,29 +36,5 @@ export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: Admin
     }
 
     return out.result.$metadata.httpStatusCode ?? HttpStatusCode.InternalServerError;
-
-
-    // const cognitoClient = await KcUtil.createCognitoClient();
-
-    // const command = new AdminSetUserPasswordCommand({
-    //     Password: password,
-    //     Permanent: true,
-    //     UserPoolId: userPoolId,
-    //     Username: username
-    // });
-    //
-    //
-    // try {
-    //     const response = await cognitoClient.send(command);
-    //     log.info("Response AdminSetUserPasswordCommand: " + JSON.stringify(response));
-    //     return response.$metadata.httpStatusCode ?? HttpStatusCode.InternalServerError;
-    // } catch (e) {
-    //     log.error("Error to change password: " + e);
-    //     log.error(e);
-    //     log.info("Error to change password (catch): " + JSON.stringify(e));
-    //     throw new Error(HttpStatusCode.InternalServerError.toString());
-    // } finally {
-    //     cognitoClient.destroy();
-    // }
 
 }

@@ -1,10 +1,15 @@
-import {CognitoIdentityProviderClient, RespondToAuthChallengeCommand} from "@aws-sdk/client-cognito-identity-provider";
+import {
+    CognitoIdentityProviderClient,
+    RespondToAuthChallengeCommand,
+    RespondToAuthChallengeCommandInput as Input,
+    RespondToAuthChallengeCommandOutput as Output
+} from "@aws-sdk/client-cognito-identity-provider";
 import {loggerUtil as log} from "../utils/logger.util";
 import {EnvUtil} from "../utils/env.util";
 import {AuthChangePasswordV2Rq} from "../models/auth-login.model";
 import {HttpStatusCode} from "axios";
-import crypto from "crypto";
 import {KcUtil} from "../utils/kc.util";
+import {CognitoUtil} from "../utils/cognito.util";
 
 export const changePwdFirstTimeV2CommandExecutor = async (input: AuthChangePasswordV2Rq) => {
 
@@ -36,18 +41,14 @@ export const changePwdFirstTimeV2CommandExecutor = async (input: AuthChangePassw
         Session: session
     });
 
-    try {
-        const response = await cognitoClient.send(command);
-        log.info("RespondToAuthChallengeCommand: " + JSON.stringify(response));
-        return response.$metadata.httpStatusCode ?? HttpStatusCode.InternalServerError;
-    } catch (e) {
-        log.error("Error to change password: " + e);
-        log.error(e);
-        log.info("Error to change password v2 (catch): " + JSON.stringify(e));
+    const response = await CognitoUtil.executeCommand<Input, Output>(command);
+    
+    if (response.status != 0){
+        log.info("Error to change password v2 (command): ");
         throw new Error(HttpStatusCode.InternalServerError.toString());
-    } finally {
-        cognitoClient.destroy();
     }
+
+    return response.result.$metadata.httpStatusCode ?? HttpStatusCode.InternalServerError;
 
 
 }

@@ -1,13 +1,14 @@
 import {
-    CognitoIdentityProviderClient,
     SignUpCommand,
-    SignUpCommandInput
+    SignUpCommandInput as Input,
+    SignUpCommandOutput as Output
 } from "@aws-sdk/client-cognito-identity-provider";
 import {SignUpRq, SignUpRs} from "../models/auth-login.model";
 import {KcUtil} from "../utils/kc.util";
 import {loggerUtil as log} from "../utils/logger.util";
 import {EnvUtil} from "../utils/env.util";
 import {HttpStatusCode} from "axios";
+import {CognitoUtil} from "../utils/cognito.util";
 
 export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs> => {
 
@@ -18,9 +19,7 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
 
     const [clientId] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID', 'AUTH_AWS_REGION']);
 
-    const cognitoClient = await KcUtil.createCognitoClient();
-
-    const signUpCommandInput: SignUpCommandInput = {
+    const signUpCommandInput: Input = {
         ClientId: clientId,
         Password: password,
         Username: username,
@@ -44,21 +43,18 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
         ]
     }
 
-    const command = new SignUpCommand(signUpCommandInput);
 
-    try {
-        const response = await cognitoClient.send(command);
-        log.info("RespondToAuthChallengeCommand: " + JSON.stringify(response));
-        return {
-            username: username,
-            message: `User ${username} created successfully.`
-        }
-    } catch (e) {
-        log.error("Error to change password: " + e);
-        log.info("Error to signup (catch): " + JSON.stringify(e));
+    const command = new SignUpCommand(signUpCommandInput);
+    const response = await CognitoUtil.executeCommand<Input, Output>(command)
+
+    if (response.status != 0) {
+        log.info("Error to signup (command): ");
         throw new Error(HttpStatusCode.InternalServerError.toString());
-    } finally {
-        cognitoClient.destroy();
     }
 
+    return {
+        username: username,
+        message: `User ${username} created successfully.`
+    }
+    
 }

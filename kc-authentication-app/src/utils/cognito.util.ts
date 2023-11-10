@@ -13,7 +13,9 @@ export interface Output<T> {
 export class CognitoUtil {
 
     static async executeCommand<I, O>(command: $Command<any, any, any>): Promise<Output<O>> {
+
         const client = await KcUtil.createCognitoClient();
+
         const result: Output<O> = {} as Output<O>;
 
         try {
@@ -22,6 +24,7 @@ export class CognitoUtil {
             result.result = await client.send(command);
         } catch (e) {
             console.log("Error to execute command: " + e);
+            console.log(JSON.stringify(e));
             result.status = 1;
             result.errors = ["Error", "E2"]
             result.result = null;

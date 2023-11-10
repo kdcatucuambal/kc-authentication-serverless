@@ -16,9 +16,9 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
     const hash = await KcUtil.generateSecretHash(username);
     log.info("Hash: " + hash)
 
-    const [clientId, region] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID', 'AUTH_AWS_REGION']);
+    const [clientId] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID', 'AUTH_AWS_REGION']);
 
-    const client = new CognitoIdentityProviderClient({region});
+    const cognitoClient = await KcUtil.createCognitoClient();
 
     const signUpCommandInput: SignUpCommandInput = {
         ClientId: clientId,
@@ -47,7 +47,7 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
     const command = new SignUpCommand(signUpCommandInput);
 
     try {
-        const response = await client.send(command);
+        const response = await cognitoClient.send(command);
         log.info("RespondToAuthChallengeCommand: " + JSON.stringify(response));
         return {
             username: username,
@@ -55,10 +55,10 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
         }
     } catch (e) {
         log.error("Error to change password: " + e);
-        log.error(e);
+        log.info("Error to signup (catch): " + JSON.stringify(e));
         throw new Error(HttpStatusCode.InternalServerError.toString());
     } finally {
-        client.destroy();
+        cognitoClient.destroy();
     }
 
 }

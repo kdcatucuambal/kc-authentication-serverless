@@ -8,12 +8,9 @@ import {KcUtil} from "../utils/kc.util";
 
 export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredentials): Promise<AuthLoginRs> => {
 
-    const [region, clientId, secretClient] = EnvUtil.getObjectEnvVarOrThrow(
-        ['AUTH_AWS_REGION', 'AUTH_CLIENT_ID', 'AUTH_SECRET_CLIENT']);
+    const [clientId] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID']);
 
     const {username, password} = authUserCredentials;
-
-    const client = new CognitoIdentityProviderClient({region});
 
     log.info("username: " + username);
     log.info("password: " + password);

@@ -2,6 +2,7 @@ import {APIGatewayAuthorizerResult, APIGatewayTokenAuthorizerEvent} from "aws-la
 import {CognitoJwtVerifier} from "aws-jwt-verify";
 import crypto from "crypto";
 import {EnvUtil} from "./env.util";
+import {CognitoIdentityProviderClient} from "@aws-sdk/client-cognito-identity-provider";
 
 const AWS_ACCOUNT = process.env.AUTH_AWS_ACCOUNT_ID;
 const AWS_REGION = process.env.AUTH_AWS_REGION;
@@ -55,6 +56,11 @@ export class KcUtil {
         const [clientId, secretClient] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID', 'AUTH_SECRET_CLIENT']);
         return crypto.createHmac('sha256', secretClient)
             .update(`${login}${clientId}`).digest('base64');
+    }
+
+    static async createCognitoClient(){
+        const [region] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_AWS_REGION']);
+        return new CognitoIdentityProviderClient({region});
     }
 
     static async createPolicy(

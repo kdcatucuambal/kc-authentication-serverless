@@ -20,7 +20,7 @@ export const changePwdFirstTimeV2CommandExecutor = async (input: AuthChangePassw
     log.info('region: ' + region);
     log.info('userPoolId: ' + userPoolId);
 
-    const client = new CognitoIdentityProviderClient({region});
+    const cognitoClient = await KcUtil.createCognitoClient();
 
     const hash = await KcUtil.generateSecretHash(authentication.login);
     log.info("Hash: " + hash)
@@ -37,15 +37,16 @@ export const changePwdFirstTimeV2CommandExecutor = async (input: AuthChangePassw
     });
 
     try {
-        const response = await client.send(command);
+        const response = await cognitoClient.send(command);
         log.info("RespondToAuthChallengeCommand: " + JSON.stringify(response));
         return response.$metadata.httpStatusCode ?? HttpStatusCode.InternalServerError;
     } catch (e) {
         log.error("Error to change password: " + e);
         log.error(e);
+        log.info("Error to change password v2 (catch): " + JSON.stringify(e));
         throw new Error(HttpStatusCode.InternalServerError.toString());
     } finally {
-        client.destroy();
+        cognitoClient.destroy();
     }
 
 

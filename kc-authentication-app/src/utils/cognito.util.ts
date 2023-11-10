@@ -26,7 +26,7 @@ export class CognitoUtil {
             console.log("Error to execute command: " + e);
             console.log(JSON.stringify(e));
             result.status = 1;
-            result.errors = ["Error", "E2"]
+            result.errors = [e.message];
             result.result = null;
         } finally {
             client.destroy();

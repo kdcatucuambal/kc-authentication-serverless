@@ -2,7 +2,7 @@ import {APIGatewayAuthorizerResult, APIGatewayTokenAuthorizerEvent} from "aws-la
 import {CognitoJwtVerifier} from "aws-jwt-verify";
 import crypto from "crypto";
 import {EnvUtil} from "./env.util";
-import {CognitoIdentityProviderClient} from "@aws-sdk/client-cognito-identity-provider";
+import {CognitoIdentityProviderClient, InternalErrorException} from "@aws-sdk/client-cognito-identity-provider";
 
 const AWS_ACCOUNT = process.env.AUTH_AWS_ACCOUNT_ID;
 const AWS_REGION = process.env.AUTH_AWS_REGION;

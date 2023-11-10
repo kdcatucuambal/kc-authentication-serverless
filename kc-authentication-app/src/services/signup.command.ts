@@ -39,7 +39,7 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
                 Name: "phone_number", Value: attributes.phoneNumber
             },
             {
-                Name: "updated_at", Value: new Date().toISOString()
+                Name: "updated_at", Value: Math.floor(Date.now() / 1000).toString()
             }
         ]
     }

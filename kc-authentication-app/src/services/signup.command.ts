@@ -8,9 +8,10 @@ import {KcUtil} from "../utils/kc.util";
 import {loggerUtil as log} from "../utils/logger.util";
 import {EnvUtil} from "../utils/env.util";
 import {HttpStatusCode} from "axios";
+
 export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs> => {
 
-    const { username, password, attributes } = request;
+    const {username, password, attributes} = request;
 
     const hash = await KcUtil.generateSecretHash(username);
     log.info("Hash: " + hash)
@@ -26,16 +27,25 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
         SecretHash: hash,
         UserAttributes: [
             {
-                Name: "email",
-                Value: attributes.email
+                Name: "email", Value: attributes.email
             },
             {
-                Name: "name",
-                Value: attributes.name + " " + attributes.lastName
+                Name: "name", Value: attributes.name
             },
             {
-                Name: "phone_number",
-                Value: attributes.phoneNumber
+                Name: "family_name", Value: attributes.lastName
+            },
+            {
+                Name: "phone_number", Value: attributes.phoneNumber
+            },
+            {
+                Name: "email_verified", Value: "true"
+            },
+            {
+                Name: "phone_number_verified", Value: "true"
+            },
+            {
+                Name: "updated_at", Value: new Date().toISOString()
             }
         ]
     }

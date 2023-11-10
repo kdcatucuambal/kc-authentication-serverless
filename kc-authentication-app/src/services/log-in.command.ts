@@ -28,8 +28,10 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
         }
     });
 
+    const cognitoClient = await KcUtil.createCognitoClient();
+
     try {
-        const response = await client.send(command);
+        const response = await cognitoClient.send(command);
         log.info("Initiate auth command response: " + JSON.stringify(response));
         if (!response.AuthenticationResult && response.ChallengeName === "NEW_PASSWORD_REQUIRED") {
             log.info("Authentication failed: Code 401")
@@ -62,7 +64,7 @@ export const LogInCommandExecutor = async (authUserCredentials: AuthUserCredenti
         }
         throw new Error(HttpStatusCode.InternalServerError.toString());
     } finally {
-        client.destroy();
+        cognitoClient.destroy();
     }
 
 

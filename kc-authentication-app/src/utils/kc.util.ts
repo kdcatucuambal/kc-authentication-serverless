@@ -28,7 +28,6 @@ export class KcUtil {
 
         try {
             const response = await verifier.verify(token as any);
-            response.username;
             console.log("Validate token: " + JSON.stringify(response));
             return response.username;
         } catch (e) {

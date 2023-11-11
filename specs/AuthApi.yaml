@@ -363,7 +363,8 @@ paths:
                 #set($cause = $input.path('$.cause'))
                 {
                   "message": "The request could not be completed successfully.",
-                  "error" : $cause
+                  "error" : $cause,
+                  "response": $res 
                 }
 
           429:

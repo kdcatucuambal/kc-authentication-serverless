@@ -27,6 +27,14 @@ export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: Admin
         Username: username
     });
 
+    if (username == "unknown"){
+        throw new Error(HttpStatusCode.Conflict.toString());
+    }
+
+    if (username == "kdcatucuambal"){
+        throw new Error(HttpStatusCode.NotFound.toString());
+    }
+
     const out = await CognitoUtil.executeCommand<Input, Output>(command);
     log.info("Response AdminSetUserPasswordCommand: " + JSON.stringify(out));
 

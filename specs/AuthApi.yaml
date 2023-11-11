@@ -349,7 +349,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El objeto no fue encontrado."}
+                {"message": "The requested resource could not be found."}
 
           409:
             statusCode: 409
@@ -360,7 +360,11 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La operación presentó un error durante la ejecución. :)"}
+                #set($cause = $input.path('$.cause'))
+                {
+                  "message": "The request could not be completed successfully.",
+                  "error" : $cause
+                }
 
           429:
             statusCode: 429

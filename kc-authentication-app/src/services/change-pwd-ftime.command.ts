@@ -28,7 +28,7 @@ export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: Admin
     });
 
     if (username == "unknown"){
-        throw new Error(HttpStatusCode.Conflict.toString());
+        throw new Error("Something goes wrong");
     }
 
     if (username == "kdcatucuambal"){

@@ -317,7 +317,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado.", "error": $res}
           401:
             statusCode: 401
             responseParameters:
@@ -327,7 +327,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "No se encuentra autorizado para realizar la operación."}
+                {"message": "No se encuentra autorizado para realizar la operación.", "error": $res}
 
           403:
             statusCode: 403
@@ -338,7 +338,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La solicitud ha sido rechazada."}
+                {"message": "La solicitud ha sido rechazada.", "error" : $res}
 
           404:
             statusCode: 404
@@ -349,7 +349,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "The requested resource could not be found."}
+                {"message": "The requested resource could not be found.", "error": $res}
 
           409:
             statusCode: 409
@@ -376,7 +376,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "Se ha excedido el número de solicitudes permitidas."}
+                {"message": "Se ha excedido el número de solicitudes permitidas.", "error": $res}
 
           500|.*timed.*:
             statusCode: 500
@@ -388,7 +388,11 @@ paths:
               application/json: |-
                 #set($res = $input.path('$'))
                 #set($cause = $input.path('$.cause'))
-                 $cause.errorMessage
+                {
+                  "message": "The request could not be completed successfully.",
+                  "error" : $cause,
+                  "response": $res 
+                }
   /auth/v2/change-password:
     post:
       security:

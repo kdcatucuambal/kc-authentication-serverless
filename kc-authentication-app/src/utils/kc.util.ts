@@ -13,7 +13,7 @@ export class KcUtil {
     static DENY_TEXT = "Deny";
     static PRINCIPAL_ID = "user|kcatucuamba";
 
-    static async validateToken(token: string): Promise<boolean> {
+    static async validateToken(token: string): Promise<string> {
 
         const userPoolId = process.env.AUTH_USER_POOL_ID;
         const clientId = process.env.AUTH_CLIENT_ID;
@@ -24,31 +24,31 @@ export class KcUtil {
             clientId
         });
 
-        console.log("Token original: " + token);
         token = token.replace("Bearer ", "");
-        console.log("Token to send: " + token);
+
         try {
             const response = await verifier.verify(token as any);
+            response.username;
             console.log("Validate token: " + JSON.stringify(response));
-            return true;
+            return response.username;
         } catch (e) {
             console.log("Error to validate token: " + e);
             console.log(e);
-            return false;
+            return null;
         }
 
     }
 
     static async generatePolicy(event: APIGatewayTokenAuthorizerEvent): Promise<APIGatewayAuthorizerResult> {
 
-        const isTokenFailed = !(await KcUtil.validateToken(event.authorizationToken));
+        const username = await KcUtil.validateToken(event.authorizationToken);
 
-        if (isTokenFailed) {
-            return await KcUtil.createPolicy("user/unauthorized", KcUtil.DENY_TEXT, event.methodArn);
+        if (username == null) {
+            return await KcUtil.createPolicy("user|null", KcUtil.DENY_TEXT, event.methodArn);
         }
 
         const resource = "arn:aws:execute-api:" + AWS_REGION + ":" + AWS_ACCOUNT + ":*/*/*/*";
-        return await KcUtil.createPolicy(KcUtil.PRINCIPAL_ID, KcUtil.ALLOW_TEXT, resource);
+        return await KcUtil.createPolicy(`user|${username}`, KcUtil.ALLOW_TEXT, resource);
     }
 
 

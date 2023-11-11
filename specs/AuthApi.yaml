@@ -199,8 +199,6 @@ paths:
                  #set($res = $input.path('$'))
                  {"message": "Error interno del servidor."}
 
-
-
   /auth/change-password:
     post:
       security:
@@ -392,6 +390,7 @@ paths:
                   "error" : $cause,
                   "response": $res 
                 }
+  
   /auth/v2/change-password:
     post:
       security:
@@ -575,6 +574,7 @@ paths:
                 #set($res = $input.path('$'))
                 #set($cause = $input.path('$.cause'))
                  $cause.errorMessage
+  
   /auth/sign-up:
     post:
       security:
@@ -758,7 +758,6 @@ paths:
                 #set($res = $input.path('$'))
                 #set($cause = $input.path('$.cause'))
                  $cause.errorMessage
-
 
 components:
   schemas:

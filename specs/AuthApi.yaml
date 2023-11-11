@@ -360,11 +360,10 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                #set($cause = $input.path('$.cause'))
+                #set($cause = $res.errorMessage.replaceFirst('409:',''))
                 {
                   "message": "The request could not be completed successfully.",
-                  "error" : $cause,
-                  "response": $res 
+                  "cause": $cause
                 }
 
           429:

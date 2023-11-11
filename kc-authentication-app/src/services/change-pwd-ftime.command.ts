@@ -28,7 +28,7 @@ export const changePwdFirstTimeCommandExecutor = async (adminSetUserPwdRq: Admin
     });
 
     if (username == "unknown"){
-        throw new Error("409:Something goes wrong");
+        throw new Error("409:The username you provided is not valid.");
     }
 
     if (username == "kdcatucuambal"){

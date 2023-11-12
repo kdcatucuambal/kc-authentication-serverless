@@ -7,22 +7,15 @@ import {loggerUtil as log} from "../utils/logger.util";
 
 import {HttpStatusCode} from "axios";
 import {changePwdFirstTimeV2CommandExecutor} from "../services/change-pwd-v2.command";
+import {LambdaUtil} from "../utils/lambda.util";
 
 export const handlerChangePasswordV2:
     KcRequestProxyEvent<AuthChangePasswordV2Rq, AdminSetUserPasswordRs> = async (event, context) => {
-
-    log.info('Event: ' + JSON.stringify(event));
-    log.info('Context: ' + JSON.stringify(context));
-
-    const httpCodeCmd = await changePwdFirstTimeV2CommandExecutor(event.body)
-
-    return {
-        body: {
-            statusHttpCommand: httpCodeCmd,
-            message: "Password changed successfully"
-        },
-        statusCode: HttpStatusCode.Created,
-        headers: {}
+    LambdaUtil.logContext(event, context);
+    const httpCodeCmd = await changePwdFirstTimeV2CommandExecutor(event.body);
+    const headers = {
+        "service_method: ": "handler_change_password_v2"
     }
-
+    const body: AdminSetUserPasswordRs = {message: "Password changed successfully", statusHttpCommand: httpCodeCmd}
+    return LambdaUtil.mappingResponse(body, HttpStatusCode.Created, headers)
 }

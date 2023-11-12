@@ -349,7 +349,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The requested resource could not be found.", "error": $res}
 
-          409:*:
+          ^409:.*:
             statusCode: 409
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''

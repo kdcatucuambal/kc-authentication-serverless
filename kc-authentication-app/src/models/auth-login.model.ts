@@ -3,6 +3,14 @@ export interface AuthUserCredentials {
     password: string
 }
 
+export interface AuthLoginRq{
+    authentication:{
+        login: string,
+        password: string
+    }
+}
+
+
 export interface AuthChangePassword {
     previousPassword: string,
     proposedPassword: string,

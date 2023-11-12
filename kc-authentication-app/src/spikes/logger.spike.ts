@@ -7,11 +7,18 @@ export const logger = createLogger({
             format: format.combine(
                 format.printf(info => {
                     const now = new Date();
-                    return `${now.toISOString()} [${info.level.toUpperCase()}] ${info.message}`;
+                    const messageToJSON = JSON.stringify(info.message);
+                    return `${now.toLocaleString()} [${info.level.toUpperCase()}] ${messageToJSON}`;
                 })
             )
         })
     ]
 });
 
-logger.info('Hello world');
+const json = {
+    name: "John",
+    age: 31,
+    city: "New York"
+}
+
+logger.info('Hello world=> ' + json);

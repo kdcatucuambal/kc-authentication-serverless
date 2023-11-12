@@ -11,14 +11,10 @@ import {HttpStatusCode} from "axios";
 import {CognitoUtil} from "../utils/cognito.util";
 
 export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs> => {
-
+    log.info("Sign up command executor: " + JSON.stringify(request));
     const {username, password, attributes} = request;
-
     const hash = await KcUtil.generateSecretHash(username);
-    log.info("Hash: " + hash)
-
     const [clientId] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID', 'AUTH_AWS_REGION']);
-
     const signUpCommandInput: Input = {
         ClientId: clientId,
         Password: password,
@@ -42,7 +38,6 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
             }
         ]
     }
-
 
     const command = new SignUpCommand(signUpCommandInput);
     const response = await CognitoUtil.executeCommand<Input, Output>(command)

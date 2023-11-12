@@ -7,7 +7,8 @@ export const logger = createLogger({
             format: format.combine(
                 format.printf(info => {
                     const now = new Date();
-                    const messageToJSON = JSON.stringify(info.message);
+                    //const messageToJSON = JSON.stringify(info.message);
+                    const messageToJSON = info.message;
                     return `${now.toLocaleString()} [${info.level.toUpperCase()}] ${messageToJSON}`;
                 })
             )
@@ -21,4 +22,6 @@ const json = {
     city: "New York"
 }
 
-logger.info('Hello world=> ' + json);
+console.log(json);
+logger.info('Hello world=> ' + JSON.stringify(json));
+logger.info("", "")

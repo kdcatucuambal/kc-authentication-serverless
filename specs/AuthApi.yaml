@@ -587,7 +587,7 @@ components:
         authentication:
           type: object
           properties:
-            username:
+            login:
               type: string
               description: "The username or email address of the user."
             password:
@@ -596,7 +596,7 @@ components:
               minLength: 8
               maxLength: 20
           required:
-            - username
+            - login
             - password
     AuthLogInRs:
       type: object
@@ -680,7 +680,7 @@ components:
         authentication:
           type: object
           properties:
-            username:
+            login:
               type: string
               description: "The username of the user."
             password:

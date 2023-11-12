@@ -3,56 +3,57 @@ export interface AuthUserCredentials {
     password: string
 }
 
-export interface AuthLoginRq{
-    authentication:{
+export interface AuthLoginRq {
+    authentication: {
         login: string,
         password: string
     }
 }
 
-
-export interface AuthChangePassword {
-    previousPassword: string,
-    proposedPassword: string,
-    token: string
-}
-
-
 export interface AuthLoginRs {
-    statusMessage: string,
-    credentials?:{
-        idToken: string,
-        accessToken: string,
-        refreshToken: string,
-    },
-    session?: string
+    authenticationResult: {
+        message: string,
+        credentials?: {
+            accessToken: string
+        },
+        session?: string,
+        nextChallenge: string
+    }
 }
 
-export interface AdminSetUserPasswordRq{
+export interface AdminSetUserPasswordRq {
     password: string,
     permanent: boolean,
     userPoolId: string,
     username: string
 }
 
-export interface AuthChangePasswordV2Rq{
-    authentication: {
-        login: string
-    },
-    session: string,
-    newPassword: string
-}
-
-
-
-export interface AdminSetUserPasswordRs{
+export interface AdminSetUserPasswordRs {
     statusHttpCommand: number,
     message: string
 }
 
-export interface SignUpRq{
-    username: string,
-    password: string,
+export interface AuthChangePasswordRq {
+    authenticationResult: {
+        login: string,
+        session: string,
+        password: string
+    }
+}
+
+export interface AuthChangePasswordRs{
+    changePasswordResult: {
+        message: string,
+        nextChallenge: string
+    }
+}
+
+
+export interface AuthSignUpRq {
+    authentication:{
+        username: string,
+        password: string,
+    }
     attributes: {
         email: string,
         phoneNumber: string,
@@ -61,7 +62,10 @@ export interface SignUpRq{
     }
 }
 
-export interface SignUpRs{
-    username: string,
-    message: string
+export interface AuthSignUpRs {
+    authSignUpResult: {
+        username: string,
+        message: string
+    }
+
 }

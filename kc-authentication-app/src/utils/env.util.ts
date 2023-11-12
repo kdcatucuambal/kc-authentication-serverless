@@ -32,4 +32,16 @@ export class EnvUtil{
         return value.split(",");
     }
 
+    static getAuthClientId(): string {
+        return EnvUtil.getEnvVarOrThrow('AUTH_CLIENT_ID');
+    }
+
+    static getAuthSecretClient(): string {
+        return EnvUtil.getEnvVarOrThrow('AUTH_SECRET_CLIENT');
+    }
+
+    static getAuthAwsRegion(): string {
+        return EnvUtil.getEnvVarOrThrow('AUTH_AWS_REGION');
+    }
+
 }

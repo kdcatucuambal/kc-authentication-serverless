@@ -4,8 +4,8 @@ import {Context} from "aws-lambda";
 export class LambdaUtil {
 
 
-    static logContext(request: RequestObject<any>, context: Context) {
-        console.log('Event: ' + JSON.stringify(request));
+    static logContext(event: any, context: Context) {
+        console.log('Event (Request): ' + JSON.stringify(event));
         console.log('Context: ' + JSON.stringify(context));
     }
 

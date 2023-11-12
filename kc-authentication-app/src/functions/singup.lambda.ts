@@ -1,12 +1,12 @@
 import {KcRequestProxyEvent} from "../models/handler.model";
-import {SignUpRq, SignUpRs} from "../models/auth-login.model";
+import {AuthSignUpRq, AuthSignUpRs} from "../models/auth-login.model";
 
 import {HttpStatusCode} from "axios";
 import {SignupCommandExecutor} from "../services/signup.command";
 import {LambdaUtil} from "../utils/lambda.util";
 
 
-export const handlerSignUp: KcRequestProxyEvent<SignUpRq, SignUpRs> = async (event, context) => {
+export const handlerSignUp: KcRequestProxyEvent<AuthSignUpRq, AuthSignUpRs> = async (event, context) => {
     LambdaUtil.logContext(event, context);
     const authLoginResponse = await SignupCommandExecutor(event.body);
     const headers = {

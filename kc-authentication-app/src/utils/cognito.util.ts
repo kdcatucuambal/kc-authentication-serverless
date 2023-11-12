@@ -3,7 +3,7 @@ import {$Command} from "@aws-sdk/client-cognito-identity-provider";
 import {logger} from "../spikes/logger.spike";
 
 
-export interface Output<T> {
+export interface OutputCommand<T> {
 
     status: number;
     result: T
@@ -13,10 +13,10 @@ export interface Output<T> {
 
 export class CognitoUtil {
 
-    static async executeCommand<I, O>(command: $Command<any, any, any>): Promise<Output<O>> {
+    static async executeCommand<I, O>(command: $Command<any, any, any>): Promise<OutputCommand<O>> {
         logger.info("Executing command: " + JSON.stringify(command));
         const client = await KcUtil.createCognitoClient();
-        const result: Output<O> = {} as Output<O>;
+        const result: OutputCommand<O> = {} as OutputCommand<O>;
         try {
             result.status = 0;
             result.errors = [];

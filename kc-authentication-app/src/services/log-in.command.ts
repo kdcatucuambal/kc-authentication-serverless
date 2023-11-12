@@ -10,6 +10,7 @@ import {HttpStatusCode} from "axios";
 import {KcUtil} from "../utils/kc.util";
 import {CognitoUtil} from "../utils/cognito.util";
 import {logger} from "../spikes/logger.spike";
+import {CommandUtil} from "../utils/command.util";
 
 export const LogInCommandExecutor = async (authLoginRq: AuthLoginRq): Promise<AuthLoginRs> => {
     logger.info("Log in command executor: " + JSON.stringify(authLoginRq));
@@ -25,24 +26,11 @@ export const LogInCommandExecutor = async (authLoginRq: AuthLoginRq): Promise<Au
             SECRET_HASH: hash
         }
     });
-    const response = await CognitoUtil.executeCommand<Input, Output>(command);
-    if (response.status != 0) {
+    const commandRs = await CognitoUtil.executeCommand<Input, Output>(command);
+    if (commandRs.status != 0) {
         throw new Error(HttpStatusCode.InternalServerError.toString());
     }
-    if (!response.result.AuthenticationResult && response.result.ChallengeName === "NEW_PASSWORD_REQUIRED") {
-        log.info("Authentication failed: Code 401")
-        return {
-            statusMessage: "It is necessary to change the password",
-            credentials: null
-        }
-    }
-    return {
-        statusMessage: "Authentication successful",
-        credentials: {
-            idToken: response.result.AuthenticationResult.IdToken,
-            accessToken: response.result.AuthenticationResult.AccessToken,
-            refreshToken: response.result.AuthenticationResult.RefreshToken
-        },
-        session: response.result.Session
-    }
+    const authLoginRs: AuthLoginRs = CommandUtil.mapResultCommandToAuthLoginRs(commandRs);
+    log.info("AuthLoginRs: " + JSON.stringify(authLoginRs));
+    return authLoginRs;
 }

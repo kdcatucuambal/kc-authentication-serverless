@@ -3,42 +3,17 @@ import {
     SignUpCommandInput as Input,
     SignUpCommandOutput as Output
 } from "@aws-sdk/client-cognito-identity-provider";
-import {SignUpRq, SignUpRs} from "../models/auth-login.model";
+import {AuthSignUpRq, AuthSignUpRs} from "../models/auth-login.model";
 import {KcUtil} from "../utils/kc.util";
 import {loggerUtil as log} from "../utils/logger.util";
 import {EnvUtil} from "../utils/env.util";
 import {HttpStatusCode} from "axios";
 import {CognitoUtil} from "../utils/cognito.util";
+import {CommandUtil} from "../utils/command.util";
 
-export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs> => {
+export const SignupCommandExecutor = async (request: AuthSignUpRq): Promise<AuthSignUpRs> => {
     log.info("Sign up command executor: " + JSON.stringify(request));
-    const {username, password, attributes} = request;
-    const hash = await KcUtil.generateSecretHash(username);
-    const [clientId] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID', 'AUTH_AWS_REGION']);
-    const signUpCommandInput: Input = {
-        ClientId: clientId,
-        Password: password,
-        Username: username,
-        SecretHash: hash,
-        UserAttributes: [
-            {
-                Name: "email", Value: attributes.email
-            },
-            {
-                Name: "name", Value: attributes.name
-            },
-            {
-                Name: "family_name", Value: attributes.lastName
-            },
-            {
-                Name: "phone_number", Value: attributes.phoneNumber
-            },
-            {
-                Name: "updated_at", Value: Math.floor(Date.now() / 1000).toString()
-            }
-        ]
-    }
-
+    const signUpCommandInput = await CommandUtil.mapSignUpCommandInput(request);
     const command = new SignUpCommand(signUpCommandInput);
     const response = await CognitoUtil.executeCommand<Input, Output>(command)
 
@@ -47,9 +22,13 @@ export const SignupCommandExecutor = async (request: SignUpRq): Promise<SignUpRs
         throw new Error(HttpStatusCode.InternalServerError.toString());
     }
 
-    return {
-        username: username,
-        message: `User ${username} created successfully.`
+    const authSignUpRs: AuthSignUpRs = {
+        authSignUpResult: {
+            username: request.authentication.username,
+            message: `User ${request.authentication.username} created successfully.`
+        }
     }
-    
+
+    log.info("AuthSignUpRs: " + JSON.stringify(authSignUpRs));
+    return authSignUpRs;
 }

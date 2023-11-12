@@ -151,8 +151,6 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
 
-
-
   ChangePasswordLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -196,52 +194,6 @@ Resources:
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Sub "${ChangePasswordLambda}:${LambdaAliasProduction}"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
-
-  ChangePasswordV2Lambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${EnvironmentId}-ChangePasswordV2Lambda
-      Handler: index.handlerChangePasswordV2
-      Runtime: nodejs18.x
-      CodeUri: ./dist
-      MemorySize: 512
-      Timeout: 20
-      Role: !Ref AuthRoleArn
-      AutoPublishAlias: !Ref LambdaAliasProduction
-      Layers:
-        - !Ref AuthLayer
-      Environment:
-        Variables:
-          ENVIRONMENT_ID: !Ref EnvironmentId
-          LOG_LEVEL: DEBUG
-          KMS_KEY_ID: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
-          AUTH_AWS_REGION: !Ref AuthAwsRegion
-          AUTH_CLIENT_ID: !Ref AuthClientId
-          AUTH_SECRET_CLIENT: !Ref AuthSecretClient
-          AUTH_USER_POOL_ID: !Ref AuthUserPoolId
-          AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
-      Tracing: Active
-      Events:
-        EventApi:
-          Type: Api
-          Properties:
-            RestApiId: !Ref AuthApiGateway
-            Path: /auth/v2/change-password
-            Method: post
-
-  ChangePasswordV2LogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Sub "/aws/lambda/${ChangePasswordV2Lambda}"
-      RetentionInDays: !Ref LogRetentionInDays
-
-  ChangePasswordV2ProductionPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Sub "${ChangePasswordV2Lambda}:${LambdaAliasProduction}"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AuthApiGateway}*/*/*"
 
@@ -330,10 +282,6 @@ Outputs:
   ChangePasswordLambdaArn:
     Description: ChangePassword Lambda ARN
     Value: !GetAtt ChangePasswordLambda.Arn
-
-  ChangePasswordV2LambdaArn:
-    Description: ChangePasswordV2 Lambda ARN
-    Value: !GetAtt ChangePasswordV2Lambda.Arn
 
   SignUpLambdaArn:
     Description: SignUp Lambda ARN

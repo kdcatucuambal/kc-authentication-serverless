@@ -11,7 +11,6 @@ export const handlerLogIn: KcRequestProxyEvent<AuthLoginRq, AuthLoginRs> = async
     const headers = {
         "service_method: ": "handler_log_in"
     }
-    return LambdaUtil.mappingResponse(authLoginResponse, HttpStatusCode.Created, headers)
-
+    return LambdaUtil.mappingResponse(authLoginResponse, HttpStatusCode.Created, headers);
 }
 

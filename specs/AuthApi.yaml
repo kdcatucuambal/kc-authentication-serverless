@@ -166,7 +166,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The requested resource could not be found."}
 
-          409:
+          ^409:.*:
             statusCode: 409
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -192,7 +192,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The number of allowed requests has been exceeded."}
 
-          500|.*timed.*:
+          500:.*timed.*:
             statusCode: 500
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -203,7 +203,7 @@ paths:
                 #set($res = $input.path('$'))
                 #set($cause = $res.errorMessage.replaceFirst('500:',''))
                 {
-                  message: "Error while processing the request.",
+                  "message": "Error while processing the request.",
                   "cause": "$cause"
                 }
   /auth/change-password:
@@ -354,7 +354,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The requested resource could not be found."}
 
-          409:
+          ^409:.*:
             statusCode: 409
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -380,7 +380,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The number of allowed requests has been exceeded."}
 
-          500.*timed.*:
+          500:.*timed.*:
             statusCode: 500
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -391,7 +391,7 @@ paths:
                 #set($res = $input.path('$'))
                 #set($cause = $res.errorMessage.replaceFirst('500:',''))
                 {
-                  message: "Error while processing the request.",
+                  "message": "Error while processing the request.",
                   "cause": "$cause"
                 }
   
@@ -545,7 +545,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The requested resource could not be found."}
 
-          409:
+          ^409:.*:
             statusCode: 409
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -572,7 +572,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The number of allowed requests has been exceeded."}
 
-          500|.*timed.*:
+          500:.*timed.*:
             statusCode: 500
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -583,7 +583,7 @@ paths:
                 #set($res = $input.path('$'))
                 #set($cause = $res.errorMessage.replaceFirst('500:',''))
                 {
-                  message: "Error while processing the request.",
+                  "message": "Error while processing the request.",
                   "cause": "$cause"
                 }
 

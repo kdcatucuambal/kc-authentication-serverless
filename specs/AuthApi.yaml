@@ -36,7 +36,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthLogInRequest'
+              $ref: '#/components/schemas/AuthLogInRq'
       responses:
         201:
           description: OK
@@ -57,7 +57,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthLogInResponse'
+                $ref: '#/components/schemas/AuthLogInRs'
                   
                 
         400:
@@ -204,7 +204,6 @@ paths:
                 #set($cause = $input.path('$.cause'))
                  $cause.errorMessage
 
-
   /auth/change-password:
     post:
       security:
@@ -225,7 +224,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/AuthChangePasswordRq'
       responses:
         201:
           description: OK
@@ -246,8 +245,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-
+                $ref: '#/components/schemas/AuthChangePasswordRs'
 
         400:
           $ref: '#/components/responses/Response400'
@@ -412,7 +410,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/AuthSignUpRq'
       responses:
         201:
           description: OK
@@ -433,7 +431,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/AuthSignUpRs'
 
 
         400:
@@ -583,42 +581,144 @@ paths:
 
 components:
   schemas:
-    AuthLogInRequest:
+    AuthLogInRq:
       type: object
       properties:
-        username:
-          type: string
-        password:
-          type: string
-          minLength: 8
-          maxLength: 20
-      required:
-        - username
-        - password
-    AuthLogInResponse:
+        authentication:
+          type: object
+          properties:
+          username:
+            type: string
+            description: "The username or email address of the user."
+          password:
+            type: string
+            description: "The password of the user."
+            minLength: 8
+            maxLength: 20
+          required:
+            - username
+            - password
+    AuthLogInRs:
       type: object
       properties:
-        credentials:
-          $ref: "#/components/schemas/AuthLoginCredentials"
-        statusMessage:
-          type: string
+        authenticationResult:
+          type: object
+          properties:
+            message:
+              type: string
+            credentials:
+              type: object
+              nullable: true
+              properties:
+                accessToken:
+                  type: string
+                  format: jwt
+            session:
+              type: string
+              nullable: true
+            nextChallenge:
+              type: string
+          required:
+            - message
+            - nextChallenge
+   
+    # AuthLoginCredentials:
+    #   type: object
+    #   properties:
+    #     accessToken:
+    #       type: string
+    #       format: jwt
+    #     refreshToken:
+    #       type: string
+    #       format: jwt
+    #     idToken:
+    #       type: string
+    #   required:
+    #     - accessToken
+    #     - refreshToken
+    #     - idToken
 
-    
-    AuthLoginCredentials:
+    AuthChangePasswordRq:
       type: object
       properties:
-        accessToken:
-          type: string
-          format: jwt
-        refreshToken:
-          type: string
-          format: jwt
-        idToken:
-          type: string
-      required:
-        - accessToken
-        - refreshToken
-        - idToken
+        changePassword:
+          type: object
+          properties:
+            authentication:
+              login: string
+              description: "The username or email address of the user."
+            session:
+              type: string
+              description: "The session of the user generated previously."
+            password:
+              type: string
+              description: "The new password of the user."
+              minLength: 8
+              maxLength: 20
+          required:
+            - authentication
+            - session
+            - password
+      
+    AuthChangePasswordRs:
+      type: object
+      properties:
+        changePasswordResult:
+          type: object
+          properties:
+            message:
+              type: string
+              description: "The result of the operation."
+            nextChallenge:
+              type: string
+              description: "The next challenge to be performed."
+
+
+    AuthSignUpRq:
+      type: object
+      properties:
+        authentication:
+          type: object
+          properties:
+            username: 
+              type: string
+              description: "The username of the user."
+            password:
+              type: string
+              description: "The password of the user."
+              minLength: 8
+              maxLength: 20
+        attributes:
+          tpye: object
+          properties:
+            email:
+              type: string
+              description: "The email address of the user."
+            phoneNumber:
+              type: string
+              description: "The phone number of the user."
+            name:
+              type: string
+              description: "The name of the user."
+            lastName:
+              type: string
+              description: "The last name of the user."
+
+    AuthSignUpRs:
+      type: object
+      authSignUpResult:
+        type: object
+        properties:
+          message:
+            type: string
+            description: "The result of the operation."
+          username:
+            type: string
+            description: "The username of the user."
+          nextChallenge:
+            type: string
+            description: "The next challenge to be performed."
+
 
     ErrorResponse:
       type: object

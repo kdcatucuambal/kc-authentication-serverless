@@ -4,9 +4,7 @@ import {
     SignUpCommandOutput as Output
 } from "@aws-sdk/client-cognito-identity-provider";
 import {AuthSignUpRq, AuthSignUpRs} from "../models/auth-login.model";
-import {KcUtil} from "../utils/kc.util";
 import {loggerUtil as log} from "../utils/logger.util";
-import {EnvUtil} from "../utils/env.util";
 import {HttpStatusCode} from "axios";
 import {CognitoUtil} from "../utils/cognito.util";
 import {CommandUtil} from "../utils/command.util";
@@ -25,7 +23,8 @@ export const SignupCommandExecutor = async (request: AuthSignUpRq): Promise<Auth
     const authSignUpRs: AuthSignUpRs = {
         authSignUpResult: {
             username: request.authentication.username,
-            message: `User ${request.authentication.username} created successfully.`
+            message: `User ${request.authentication.username} created successfully.`,
+            nextChallenge: '/auth/confirm-user'
         }
     }
 

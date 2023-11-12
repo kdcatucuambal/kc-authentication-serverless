@@ -34,14 +34,16 @@ export interface AdminSetUserPasswordRs {
 }
 
 export interface AuthChangePasswordRq {
-    authenticationResult: {
-        login: string,
+    changePassword: {
+        authentication: {
+            login: string
+        },
         session: string,
         password: string
     }
 }
 
-export interface AuthChangePasswordRs{
+export interface AuthChangePasswordRs {
     changePasswordResult: {
         message: string,
         nextChallenge: string
@@ -50,7 +52,7 @@ export interface AuthChangePasswordRs{
 
 
 export interface AuthSignUpRq {
-    authentication:{
+    authentication: {
         username: string,
         password: string,
     }
@@ -65,7 +67,8 @@ export interface AuthSignUpRq {
 export interface AuthSignUpRs {
     authSignUpResult: {
         username: string,
-        message: string
+        message: string,
+        nextChallenge: string
     }
 
 }

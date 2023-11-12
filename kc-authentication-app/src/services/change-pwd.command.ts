@@ -12,14 +12,14 @@ import {CognitoUtil} from "../utils/cognito.util";
 
 export const changePwdFirstTimeCommandExecutor = async (input: AuthChangePasswordRq): Promise<AuthChangePasswordRs> => {
     log.info("changePwdFirstTimeV2CommandExecutor input: " + JSON.stringify(input));
-    const {authenticationResult: {password, session, login}} = input;
+    const {changePassword: {password, session, authentication}} = input;
     const [clientId] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID']);
-    const hash = await KcUtil.generateSecretHash(login);
+    const hash = await KcUtil.generateSecretHash(authentication.login);
     const command = new RespondToAuthChallengeCommand({
         ChallengeName: "NEW_PASSWORD_REQUIRED",
         ClientId: clientId,
         ChallengeResponses: {
-            USERNAME: login,
+            USERNAME: authentication.login,
             NEW_PASSWORD: password,
             SECRET_HASH: hash
         },
@@ -39,5 +39,4 @@ export const changePwdFirstTimeCommandExecutor = async (input: AuthChangePasswor
     }
     log.info("AuthChangePasswordRs: " + JSON.stringify(authChangePasswordRs));
     return authChangePasswordRs;
-
 }

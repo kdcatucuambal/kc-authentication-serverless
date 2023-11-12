@@ -192,7 +192,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The number of allowed requests has been exceeded."}
 
-          500:.*timed.*:
+          ^500:.*:
             statusCode: 500
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -380,7 +380,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The number of allowed requests has been exceeded."}
 
-          500:.*timed.*:
+          ^500:.*:
             statusCode: 500
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
@@ -572,7 +572,7 @@ paths:
                 #set($res = $input.path('$'))
                 {"message": "The number of allowed requests has been exceeded."}
 
-          500:.*timed.*:
+          ^500:.*:
             statusCode: 500
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''

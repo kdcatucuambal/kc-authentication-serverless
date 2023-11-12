@@ -1,6 +1,6 @@
 import {createLogger, format, transports} from "winston";
 
-export const logger = createLogger({
+export const loggerSpk = createLogger({
     level: 'info',
     transports: [
         new transports.Console({
@@ -23,5 +23,5 @@ const json = {
 }
 
 console.log(json);
-logger.info('Hello world=> ' + JSON.stringify(json));
-logger.info("", "")
+loggerSpk.info('Hello world=> ' + JSON.stringify(json));
+loggerSpk.info("", "")

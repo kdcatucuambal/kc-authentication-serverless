@@ -1,6 +1,6 @@
 import {KcUtil} from "./kc.util";
 import {$Command} from "@aws-sdk/client-cognito-identity-provider";
-import {logger} from "../spikes/logger.spike";
+import {loggerUtil as logger} from "./logger.util";
 
 
 export interface OutputCommand<T> {

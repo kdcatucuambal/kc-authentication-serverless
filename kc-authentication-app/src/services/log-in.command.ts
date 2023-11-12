@@ -5,11 +5,10 @@ import {
     InitiateAuthCommandOutput as Output
 } from "@aws-sdk/client-cognito-identity-provider";
 import {AuthLoginRq, AuthLoginRs} from "../models/auth-login.model";
-import {loggerUtil as log} from "../utils/logger.util";
+import {loggerUtil as logger} from "../utils/logger.util";
 import {HttpStatusCode} from "axios";
 import {KcUtil} from "../utils/kc.util";
 import {CognitoUtil} from "../utils/cognito.util";
-import {logger} from "../spikes/logger.spike";
 import {CommandUtil} from "../utils/command.util";
 
 export const LogInCommandExecutor = async (authLoginRq: AuthLoginRq): Promise<AuthLoginRs> => {
@@ -31,6 +30,6 @@ export const LogInCommandExecutor = async (authLoginRq: AuthLoginRq): Promise<Au
         throw new Error(HttpStatusCode.InternalServerError.toString());
     }
     const authLoginRs: AuthLoginRs = CommandUtil.mapResultCommandToAuthLoginRs(commandRs);
-    log.info("AuthLoginRs: " + JSON.stringify(authLoginRs));
+    logger.info("AuthLoginRs: " + JSON.stringify(authLoginRs));
     return authLoginRs;
 }

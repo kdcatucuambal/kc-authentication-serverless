@@ -18,4 +18,5 @@ let persona = {
     ciudad: "Ejemploville"
 };
 
+
 logger.info("Información de la persona:", persona);

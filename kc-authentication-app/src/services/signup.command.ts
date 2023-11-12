@@ -22,8 +22,8 @@ export const SignupCommandExecutor = async (request: AuthSignUpRq): Promise<Auth
 
     const authSignUpRs: AuthSignUpRs = {
         authSignUpResult: {
-            username: request.authentication.username,
-            message: `User ${request.authentication.username} created successfully.`,
+            username: request.authentication.login,
+            message: `User ${request.authentication.login} created successfully.`,
             nextChallenge: '/auth/confirm-user'
         }
     }

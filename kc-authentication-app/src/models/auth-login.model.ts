@@ -53,7 +53,7 @@ export interface AuthChangePasswordRs {
 
 export interface AuthSignUpRq {
     authentication: {
-        username: string,
+        login: string,
         password: string,
     }
     attributes: {

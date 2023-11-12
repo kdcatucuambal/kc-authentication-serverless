@@ -47,11 +47,11 @@ export class CommandUtil {
 
     static async mapSignUpCommandInput({authentication, attributes}: AuthSignUpRq): Promise<SignUpCommandInput>{
         const clientId = EnvUtil.getAuthClientId();
-        const hash = await KcUtil.generateSecretHash(authentication.username);
+        const hash = await KcUtil.generateSecretHash(authentication.login);
         return {
             ClientId: clientId,
             Password: authentication.password,
-            Username: authentication.username,
+            Username: authentication.login,
             SecretHash: hash,
             UserAttributes: [
                 {

@@ -1,5 +1,5 @@
 import {InitiateAuthCommandOutput, SignUpCommandInput} from "@aws-sdk/client-cognito-identity-provider";
-import {AuthChangePasswordRs, AuthLoginRs, AuthSignUpRq} from "../models/auth-login.model";
+import {AuthLoginRs, AuthSignUpRq} from "../models/auth-login.model";
 import {OutputCommand} from "./cognito.util";
 import {loggerUtil as log} from "./logger.util";
 import {EnvUtil} from "./env.util";

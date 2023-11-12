@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: 
+  title:
     Fn::Sub: ${EnvironmentId}-authentication-service
   version: 0.0.1
   description: |
@@ -58,8 +58,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthLogInRs'
-                  
-                
+
+
         400:
           $ref: '#/components/responses/Response400'
         401:
@@ -80,7 +80,7 @@ paths:
         type: aws
         timeoutInMillis: 20000
         uri:
-         Fn::Join:
+          Fn::Join:
             - ""
             - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LogInLambda.Arn}:"
               - "${stageVariables.version_alias}/invocations"
@@ -131,8 +131,8 @@ paths:
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
-                 #set($res = $input.path('$'))
-                 {"message": "The request is not well formed."}
+                #set($res = $input.path('$'))
+                {"message": "The request is not well formed."}
           401:
             statusCode: 401
             responseParameters:
@@ -141,8 +141,8 @@ paths:
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
-                 #set($res = $input.path('$'))
-                 {"message": "You are not authorized to perform this operation."}
+                #set($res = $input.path('$'))
+                {"message": "You are not authorized to perform this operation."}
 
           403:
             statusCode: 403
@@ -152,8 +152,8 @@ paths:
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
-                 #set($res = $input.path('$'))
-                 {"message": "The request has been rejected."}
+                #set($res = $input.path('$'))
+                {"message": "The request has been rejected."}
 
           404:
             statusCode: 404
@@ -163,8 +163,8 @@ paths:
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
-                 #set($res = $input.path('$'))
-                 {"message": "The requested resource could not be found."}
+                #set($res = $input.path('$'))
+                {"message": "The requested resource could not be found."}
 
           409:
             statusCode: 409
@@ -587,14 +587,14 @@ components:
         authentication:
           type: object
           properties:
-          username:
-            type: string
-            description: "The username or email address of the user."
-          password:
-            type: string
-            description: "The password of the user."
-            minLength: 8
-            maxLength: 20
+            username:
+              type: string
+              description: "The username or email address of the user."
+            password:
+              type: string
+              description: "The password of the user."
+              minLength: 8
+              maxLength: 20
           required:
             - username
             - password
@@ -621,7 +621,7 @@ components:
           required:
             - message
             - nextChallenge
-   
+
     # AuthLoginCredentials:
     #   type: object
     #   properties:
@@ -659,7 +659,7 @@ components:
             - authentication
             - session
             - password
-      
+
     AuthChangePasswordRs:
       type: object
       properties:
@@ -680,7 +680,7 @@ components:
         authentication:
           type: object
           properties:
-            username: 
+            username:
               type: string
               description: "The username of the user."
             password:
@@ -689,7 +689,7 @@ components:
               minLength: 8
               maxLength: 20
         attributes:
-          tpye: object
+          type: object
           properties:
             email:
               type: string

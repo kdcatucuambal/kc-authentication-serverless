@@ -10,6 +10,10 @@ export class CommandUtil {
     private static CHALLENGE_NAME_CHANGE_PASSWORD = "/auth/change-password";
     private static CHALLENGE_NAME_LOGIN = "/auth/login";
 
+
+    static getMessageHttpLambda(statusHttp: number, cause: string){
+        return `${statusHttp}:${cause}`;
+    }
     static mapResultCommandToAuthLoginRs({
                                              result,
                                              status,

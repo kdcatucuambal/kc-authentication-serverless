@@ -9,6 +9,7 @@ import {AuthChangePasswordRq, AuthChangePasswordRs} from "../models/auth-login.m
 import {HttpStatusCode} from "axios";
 import {KcUtil} from "../utils/kc.util";
 import {CognitoUtil} from "../utils/cognito.util";
+import {CommandUtil} from "../utils/command.util";
 
 export const changePwdFirstTimeCommandExecutor = async (input: AuthChangePasswordRq): Promise<AuthChangePasswordRs> => {
     log.info("changePwdFirstTimeV2CommandExecutor input: " + JSON.stringify(input));
@@ -25,10 +26,10 @@ export const changePwdFirstTimeCommandExecutor = async (input: AuthChangePasswor
         },
         Session: session
     });
-    const {status} = await CognitoUtil.executeCommand<Input, Output>(command);
+    const {status, errors} = await CognitoUtil.executeCommand<Input, Output>(command);
     if (status != 0) {
         log.info("Error to change password (command): ");
-        throw new Error(HttpStatusCode.InternalServerError.toString());
+        throw new Error(CommandUtil.getMessageHttpLambda(HttpStatusCode.InternalServerError, errors[0]));
     }
 
     const authChangePasswordRs: AuthChangePasswordRs = {

@@ -27,7 +27,7 @@ export const LogInCommandExecutor = async (authLoginRq: AuthLoginRq): Promise<Au
     });
     const commandRs = await CognitoUtil.executeCommand<Input, Output>(command);
     if (commandRs.status != 0) {
-        throw new Error(HttpStatusCode.InternalServerError.toString());
+        throw new Error(CommandUtil.getMessageHttpLambda(HttpStatusCode.InternalServerError, commandRs.errors[0]));
     }
     const authLoginRs: AuthLoginRs = CommandUtil.mapResultCommandToAuthLoginRs(commandRs);
     logger.info("AuthLoginRs: " + JSON.stringify(authLoginRs));

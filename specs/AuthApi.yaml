@@ -175,10 +175,10 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                #set($cause = $input.path('$.cause'))
+                #set($cause = $res.errorMessage.replaceFirst('409:',''))
                 {
                   "message": "The request could not be completed successfully.",
-                  "error" : $cause
+                  "cause": "$cause"
                 }
 
           429:
@@ -201,9 +201,11 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                #set($cause = $input.path('$.cause'))
-                 $cause.errorMessage
-
+                #set($cause = $res.errorMessage.replaceFirst('500:',''))
+                {
+                  message: "Error while processing the request.",
+                  "cause": "$cause"
+                }
   /auth/change-password:
     post:
       security:
@@ -361,10 +363,10 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                #set($cause = $input.path('$.cause'))
+                #set($cause = $res.errorMessage.replaceFirst('409:',''))
                 {
                   "message": "The request could not be completed successfully.",
-                  "error" : $cause
+                  "cause": "$cause"
                 }
 
           429:
@@ -387,8 +389,11 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                #set($cause = $input.path('$.cause'))
-                 $cause.errorMessage
+                #set($cause = $res.errorMessage.replaceFirst('500:',''))
+                {
+                  message: "Error while processing the request.",
+                  "cause": "$cause"
+                }
   
   /auth/sign-up:
     post:
@@ -549,10 +554,10 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                #set($cause = $input.path('$.cause'))
+                #set($cause = $res.errorMessage.replaceFirst('409:',''))
                 {
                   "message": "The request could not be completed successfully.",
-                  "error" : $cause
+                  "cause": "$cause"
                 }
 
 
@@ -576,8 +581,11 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                #set($cause = $input.path('$.cause'))
-                 $cause.errorMessage
+                #set($cause = $res.errorMessage.replaceFirst('500:',''))
+                {
+                  message: "Error while processing the request.",
+                  "cause": "$cause"
+                }
 
 components:
   schemas:

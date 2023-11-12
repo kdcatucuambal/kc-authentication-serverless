@@ -16,8 +16,8 @@ export const SignupCommandExecutor = async (request: AuthSignUpRq): Promise<Auth
     const response = await CognitoUtil.executeCommand<Input, Output>(command)
 
     if (response.status != 0) {
-        log.info("Error to signup (command): ");
-        throw new Error(HttpStatusCode.InternalServerError.toString());
+        log.info("Error to signup (command)");
+        throw new Error(CommandUtil.getMessageHttpLambda(HttpStatusCode.InternalServerError, response.errors[0]));
     }
 
     const authSignUpRs: AuthSignUpRs = {

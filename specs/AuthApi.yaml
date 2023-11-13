@@ -614,6 +614,7 @@ components:
           properties:
             message:
               type: string
+              description: "The result of the operation."
             credentials:
               type: object
               nullable: true
@@ -621,9 +622,11 @@ components:
                 accessToken:
                   type: string
                   format: jwt
+                  description: "The access token generated. If the user has not completed the challenge, this field will be null."
             session:
               type: string
               nullable: true
+              description: "The session of the user generated. If the user has not completed the challenge, this field will be null."
             nextChallenge:
               type: string
           required:
@@ -653,8 +656,11 @@ components:
           type: object
           properties:
             authentication:
-              login: string
-              description: "The username or email address of the user."
+              type: object
+                properties:
+                  login:
+                    type: string
+                    description: "The username or email address of the user."
             session:
               type: string
               description: "The session of the user generated previously."
@@ -696,6 +702,9 @@ components:
               description: "The password of the user."
               minLength: 8
               maxLength: 20
+          required:
+            - login
+            - password
         attributes:
           type: object
           properties:
@@ -711,21 +720,30 @@ components:
             lastName:
               type: string
               description: "The last name of the user."
+          required:
+            - email
+            - phoneNumber
+            - name
+            - lastName
+      required:
+        - authentication
+        - attributes
 
     AuthSignUpRs:
       type: object
-      authSignUpResult:
-        type: object
-        properties:
-          message:
-            type: string
-            description: "The result of the operation."
-          username:
-            type: string
-            description: "The username of the user."
-          nextChallenge:
-            type: string
-            description: "The next challenge to be performed."
+      properties:
+        authSignUpResult:
+          type: object
+          properties:
+            message:
+              type: string
+              description: "The result of the operation."
+            username:
+              type: string
+              description: "The username of the user."
+            nextChallenge:
+              type: string
+              description: "The next challenge to be performed."
 
 
     ErrorResponse:

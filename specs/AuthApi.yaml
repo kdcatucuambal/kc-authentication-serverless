@@ -675,7 +675,6 @@ components:
           required:
             - authentication
             - session
-            - password
 
     AuthChangePasswordRs:
       type: object

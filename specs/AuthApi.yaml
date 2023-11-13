@@ -661,16 +661,17 @@ components:
                 login:
                   type: string
                   description: "The username or email address of the user."
+                password:
+                  type: string
+                  description: "The new password of the user."
+                  minLength: 8
+                  maxLength: 20
               required:
                 - login
+                - password
             session:
               type: string
               description: "The session of the user generated previously."
-            password:
-              type: string
-              description: "The new password of the user."
-              minLength: 8
-              maxLength: 20
           required:
             - authentication
             - session

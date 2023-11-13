@@ -13,7 +13,7 @@ import {CommandUtil} from "../utils/command.util";
 
 export const changePwdFirstTimeCommandExecutor = async (input: AuthChangePasswordRq): Promise<AuthChangePasswordRs> => {
     log.info("changePwdFirstTimeV2CommandExecutor input: " + JSON.stringify(input));
-    const {changePassword: {password, session, authentication}} = input;
+    const {changePassword: {session, authentication}} = input;
     const [clientId] = EnvUtil.getObjectEnvVarOrThrow(['AUTH_CLIENT_ID']);
     const hash = await KcUtil.generateSecretHash(authentication.login);
     const command = new RespondToAuthChallengeCommand({
@@ -21,7 +21,7 @@ export const changePwdFirstTimeCommandExecutor = async (input: AuthChangePasswor
         ClientId: clientId,
         ChallengeResponses: {
             USERNAME: authentication.login,
-            NEW_PASSWORD: password,
+            NEW_PASSWORD: authentication.password,
             SECRET_HASH: hash
         },
         Session: session

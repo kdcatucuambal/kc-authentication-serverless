@@ -36,10 +36,10 @@ export interface AdminSetUserPasswordRs {
 export interface AuthChangePasswordRq {
     changePassword: {
         authentication: {
-            login: string
+            login: string,
+            password: string
         },
-        session: string,
-        password: string
+        session: string
     }
 }
 
